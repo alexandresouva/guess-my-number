@@ -1,0 +1,31 @@
+# Arquivo .editorconfig padrão
+
+# Top-most EditorConfig file
+root = true
+
+# Estilo de fim de linha (line ending)
+[*]
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# Estilo específico para JavaScript e TypeScript
+[*.js]
+[*.jsx]
+[*.ts]
+[*.tsx]
+indent_style = space
+indent_size = 2
+quote_style = single
+
+# Estilo específico para HTML
+[*.html]
+indent_style = space
+indent_size = 2
+quote_style = double
+
+# Estilo específico para CSS
+[*.css]
+indent_style = space
+indent_size = 2
