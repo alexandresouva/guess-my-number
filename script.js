@@ -2,25 +2,28 @@
 
 let secretNumber = generateSecretNumber();
 let score = 20;
+let highscore = 0;
 
 const bodyEl = document.querySelector('body');
 const numberEl = document.querySelector('.number');
 const guessEl = document.querySelector('.guess');
 const messageEl = document.querySelector('.message');
 const scoreEl = document.querySelector('.score');
-const checkBtnEl = document.querySelector('.check');
-const againBtnEl = document.querySelector('.again');
 
 scoreEl.textContent = score;
 console.log(secretNumber);
-checkBtnEl.addEventListener('click', checkNumber);
-againBtnEl.addEventListener('click', resetGame);
+document.querySelector('.check').addEventListener('click', checkNumber);
+document.querySelector('.again').addEventListener('click', resetGame);
 
 function checkNumber() {
   const guess = Number(guessEl.value);
   if (!guess) {
     messageEl.textContent = '🤡 Choice a number.';
   } else if (guess === secretNumber) {
+    if (score > highscore) {
+      highscore = score;
+      document.querySelector('.highscore').textContent = highscore;
+    }
     updateDOMOnCorrectGuess();
   } else if (guess > secretNumber) {
     if (score > 1) {
