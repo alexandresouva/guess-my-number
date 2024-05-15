@@ -11,7 +11,6 @@ const messageEl = document.querySelector('.message');
 const scoreEl = document.querySelector('.score');
 
 scoreEl.textContent = score;
-console.log(secretNumber);
 document.querySelector('.check').addEventListener('click', checkNumber);
 document.querySelector('.again').addEventListener('click', resetGame);
 
@@ -20,23 +19,18 @@ function checkNumber() {
   if (!guess) {
     messageEl.textContent = '🤡 Choice a number.';
   } else if (guess === secretNumber) {
+    updateDOMForCorrectGuess();
     if (score > highscore) {
       highscore = score;
       document.querySelector('.highscore').textContent = highscore;
     }
-    updateDOMOnCorrectGuess();
-  } else if (guess > secretNumber) {
-    if (score > 1) {
-      messageEl.textContent = '📈 Too high!';
-      decreaseScore();
-    } else {
-      printGameOverMessage();
-    }
-  } else if (guess < secretNumber) {
-    if (score > 1) {
-      messageEl.textContent = '📉 Too low!';
-      decreaseScore();
-    } else {
+  } else if (guess !== secretNumber) {
+    messageEl.textContent =
+      guess > secretNumber ? '📈 Too high!' : '📉 Too low!';
+    resetDefaultDOMStyle();
+    decreaseScore();
+
+    if (score === 0) {
       printGameOverMessage();
     }
   }
@@ -56,22 +50,25 @@ function printGameOverMessage() {
   scoreEl.textContent = 0;
 }
 
-function updateDOMOnCorrectGuess() {
+function updateDOMForCorrectGuess() {
   messageEl.textContent = '🎉 Correct number!';
   numberEl.textContent = secretNumber;
   bodyEl.style.backgroundColor = '#60b347';
   numberEl.style.width = '30rem';
 }
 
+function resetDefaultDOMStyle() {
+  bodyEl.style.backgroundColor = '#222';
+  numberEl.style.width = '15rem';
+}
+
 function resetGame() {
   score = 20;
   secretNumber = generateSecretNumber();
-  console.log(secretNumber);
   messageEl.textContent = 'Start guessing...';
   scoreEl.textContent = score;
   guessEl.value = '';
   numberEl.textContent = '?';
 
-  bodyEl.style.backgroundColor = '#222';
-  numberEl.style.width = '15rem';
+  resetDefaultDOMStyle();
 }
