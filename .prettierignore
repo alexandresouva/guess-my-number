@@ -1,0 +1,6 @@
+*.svg
+*.gitkeep
+*.ico
+coverage
+idea
+dist
