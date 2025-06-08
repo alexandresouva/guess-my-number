@@ -9,7 +9,8 @@
     "test": "ng test",
     "lint": "ng lint --max-warnings 0 && npm run stylelint",
     "lint:fix": "ng lint --fix",
-    "stylelint": "npx stylelint '**/*.scss'"
+    "stylelint": "npx stylelint '**/*.scss'",
+    "prepare": "husky"
   },
   "lint-staged": {
     "*.{js,ts,html}": [
@@ -40,11 +41,14 @@
     "@angular-devkit/build-angular": "^19.2.14",
     "@angular/cli": "^19.2.14",
     "@angular/compiler-cli": "^19.2.0",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "20.0.0",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
+    "husky": "^9.1.7",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
