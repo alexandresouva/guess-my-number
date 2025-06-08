@@ -2,15 +2,17 @@
   "name": "guess-my-number",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run lint && npm run test && npm run test:e2e && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --no-watch --source-map --browsers=ChromeHeadlessNoSandbox",
     "lint": "ng lint --max-warnings 0 && npm run stylelint",
     "lint:fix": "ng lint --fix",
     "stylelint": "npx stylelint '**/*.scss'",
-    "prepare": "husky"
+    "prepare": "husky",
+    "e2e": "ng e2e",
+    "test:e2e": "start-server-and-test 'npm start' http://localhost:4200 'npm run cypress:run-if-found'",
+    "cypress:run-if-found": "test -n \"$(find cypress/e2e -name '*.feature')\" && cypress run || echo 'No feature files found. Skipping Cypress.'"
   },
   "lint-staged": {
     "*.{js,ts,html}": [
@@ -41,10 +43,14 @@
     "@angular-devkit/build-angular": "^19.2.14",
     "@angular/cli": "^19.2.14",
     "@angular/compiler-cli": "^19.2.0",
+    "@badeball/cypress-cucumber-preprocessor": "^22.1.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.5",
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
+    "@cypress/schematic": "^3.0.0",
     "@types/jasmine": "~5.1.0",
     "angular-eslint": "20.0.0",
+    "cypress": "latest",
     "eslint": "^9.28.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.1",
@@ -59,6 +65,7 @@
     "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
     "puppeteer": "^24.10.0",
+    "start-server-and-test": "^2.0.12",
     "stylelint": "^16.20.0",
     "stylelint-config-standard": "^38.0.0",
     "typescript": "~5.7.2",

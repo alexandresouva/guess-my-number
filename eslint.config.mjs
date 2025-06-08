@@ -27,6 +27,7 @@ export default defineConfig([
   },
   {
     files: ['**/*.ts'],
+    ignores: ['cypress.config.ts'],
     extends: compat.extends(
       'eslint:recommended',
       'plugin:@typescript-eslint/recommended',
@@ -37,7 +38,12 @@ export default defineConfig([
     ),
     languageOptions: {
       parserOptions: {
-        project: ['tsconfig.json'],
+        project: [
+          'tsconfig.json',
+          'tsconfig.app.json',
+          'tsconfig.spec.json',
+          'cypress/tsconfig.json'
+        ],
         createDefaultProgram: true
       }
     },
