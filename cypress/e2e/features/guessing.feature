@@ -1,4 +1,5 @@
 Feature: Player makes an incorrect guess
+  As a player, I want feedback when my guess is incorrect, so that I can adjust my next attempt accordingly.
 
   Scenario: Player makes a guess that is too high
     Given the player has X attempts remaining (where X > 0)
@@ -17,6 +18,7 @@ Feature: Player makes an incorrect guess
     And the timer keeps running
 
 Feature: Player makes a correct guess
+  As a player, I want to receive clear feedback when I guess correctly, so that I know I’ve won and can see my score.
 
   Scenario: Player guesses the correct number
     Given the player has made a correct guess
@@ -30,6 +32,7 @@ Feature: Player makes a correct guess
     And the final score is displayed to the player
 
 Feature: Player loses after using all attempts
+  As a player, I want to be informed when I lose after all my attempts, so that I can understand the outcome and the correct number.
 
   Scenario: Game over after exhausting all attempts without a correct guess
     Given the player has used all 5 attempts without guessing correctly

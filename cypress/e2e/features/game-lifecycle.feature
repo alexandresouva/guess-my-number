@@ -1,4 +1,5 @@
 Feature: Game lifecycle
+  As a player, I want the game to start and restart correctly, so that I can play new matches whenever I want.
 
   Scenario: The game starts correctly
     Given the game has started
