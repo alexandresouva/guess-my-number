@@ -1,27 +1,40 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, interval, map, Subject, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TimerService {
+  private readonly stop$ = new Subject<void>();
+  private readonly reset$ = new Subject<void>();
   private readonly _timeSubject = new BehaviorSubject(0);
   time$ = this._timeSubject.asObservable();
 
-  get timeMs(): number {
-    throw new Error('Method not implemented.');
+  get time(): number {
+    return this._timeSubject.value;
   }
 
   start(): void {
-    throw new Error('Method not implemented.');
+    const startTimestamp = Date.now();
+
+    interval(100)
+      .pipe(
+        map(() => (Date.now() - startTimestamp) / 1000),
+        takeUntil(this.stop$),
+        takeUntil(this.reset$)
+      )
+      .subscribe((elapsed) => {
+        this._timeSubject.next(elapsed);
+      });
   }
 
   stop(): void {
-    throw new Error('Method not implemented.');
+    this.stop$.next();
   }
 
   reset(): void {
-    throw new Error('Method not implemented.');
+    this.reset$.next();
+    this._timeSubject.next(0);
   }
 }
