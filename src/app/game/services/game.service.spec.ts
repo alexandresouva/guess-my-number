@@ -2,17 +2,22 @@ import { TestBed } from '@angular/core/testing';
 
 import { GameService } from './game.service';
 import { TimerService } from './timer.service';
+import { signal } from '@angular/core';
+
+const timeSignalMock = signal(0);
 
 describe('GameService', () => {
   let service: GameService;
   let timerServiceSpy: jasmine.SpyObj<TimerService>;
 
   beforeEach(() => {
-    timerServiceSpy = jasmine.createSpyObj('TimerService', [
-      'start',
-      'stop',
-      'time'
-    ]) as jasmine.SpyObj<TimerService>;
+    timerServiceSpy = jasmine.createSpyObj<TimerService>(
+      'TimerService',
+      ['start', 'stop'],
+      {
+        time: timeSignalMock
+      }
+    );
 
     TestBed.configureTestingModule({
       providers: [
@@ -38,7 +43,7 @@ describe('GameService', () => {
   });
 
   describe('checkGuess', () => {
-    it('should return "correct" for the correct guess', () => {
+    it('should return appropriate game result when guess is correct', () => {
       const secretNumber = service['_secretNumber'];
       const result = service.checkGuess(secretNumber);
 
@@ -49,7 +54,7 @@ describe('GameService', () => {
       });
     });
 
-    it('should return incorrect for a lower guess', () => {
+    it('should return appropriate game result for a lower guess', () => {
       const lowerGuess = service['_secretNumber'] - 1;
       const result = service.checkGuess(lowerGuess);
 
@@ -60,7 +65,7 @@ describe('GameService', () => {
       });
     });
 
-    it('should return incorrect for a higher guess', () => {
+    it('should return appropriate game result for a higher guess', () => {
       const higherGuess = service['_secretNumber'] + 1;
       const result = service.checkGuess(higherGuess);
 
@@ -81,9 +86,6 @@ describe('GameService', () => {
     });
 
     it('should call calculateScore to calculate the score', () => {
-      Object.defineProperty(timerServiceSpy, 'time', {
-        get: () => 2
-      });
       spyOn(service, '_calculateScore' as never).and.callThrough();
 
       const initialScore = service.score();
@@ -98,25 +100,21 @@ describe('GameService', () => {
 
   describe('calculateScore', () => {
     it('should return the score based on the time taken and remaining attempts', () => {
-      const elaseTimeInSeconds = 5;
+      const elapsedTimeInSeconds = 5;
       const remainingAttempts = service.attempts();
-      const expectedScore = remainingAttempts * 15 - elaseTimeInSeconds;
+      const expectedScore = remainingAttempts * 15 - elapsedTimeInSeconds;
 
-      Object.defineProperty(timerServiceSpy, 'time', {
-        get: () => elaseTimeInSeconds
-      });
+      timeSignalMock.set(elapsedTimeInSeconds);
 
       const score = service['_calculateScore']();
       expect(score).toBe(expectedScore);
     });
 
     it('should return 10 as the minimum score if the timer is longer or are fewer attempts', () => {
-      const elaseTimeInSeconds = 60; // 1 minute
+      const elapsedTimeInSeconds = 60; // 1 minute
       service['_attempts'].set(1);
 
-      Object.defineProperty(timerServiceSpy, 'time', {
-        get: () => elaseTimeInSeconds
-      });
+      timeSignalMock.set(elapsedTimeInSeconds);
 
       const score = service['_calculateScore']();
       expect(score).toBe(10);

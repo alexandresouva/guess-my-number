@@ -31,7 +31,7 @@
     </p>
     <p class="game-info__score">
       💯 Score:
-      <span data-testid="score">{{ score() }}</span>
+      <span data-testid="score">{{ score() | number: '1.0-0' }}</span>
     </p>
     <!-- TODO: Add highscore logic -->
     <p class="game-info__highscore">

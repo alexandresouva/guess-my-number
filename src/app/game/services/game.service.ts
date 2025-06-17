@@ -1,5 +1,5 @@
-import { effect, inject, Injectable, signal, untracked } from '@angular/core';
-import { GuessCheck } from '../models/guess-check.model';
+import { inject, Injectable, signal } from '@angular/core';
+import { GuessResult } from '../models/guess-result';
 import { TimerService } from './timer.service';
 
 @Injectable({
@@ -8,60 +8,53 @@ import { TimerService } from './timer.service';
 export class GameService {
   private readonly _timerService = inject(TimerService);
 
+  private readonly _secretNumber = this._generateSecretNumber();
   private readonly _attempts = signal(5);
-  attempts = this._attempts.asReadonly();
   private readonly _score = signal(0);
+
+  attempts = this._attempts.asReadonly();
   score = this._score.asReadonly();
 
-  private readonly _secretNumber = this._generateSecretNumber();
-  private readonly _playing = signal(false);
+  checkGuess(guess: number): GuessResult {
+    const isCorrectGuess = guess === this._secretNumber;
+    if (isCorrectGuess) return this._processCorrectGuess(guess);
 
-  constructor() {
-    effect(() => {
-      const playing = this._playing();
-
-      untracked(() => {
-        if (playing) return this._timerService.start();
-      });
-    });
+    return this._processIncorrectGuess(guess);
   }
 
-  checkGuess(number: number): GuessCheck {
-    if (number === this._secretNumber) {
-      this._processCorrectGuess();
-      return {
-        number,
-        correct: true,
-        message: '🎉 Correct number!'
-      };
-    }
+  private _processCorrectGuess(guess: number): GuessResult {
+    this._timerService.stop();
+    this._score.set(this._calculateScore());
 
-    this._playing.set(true);
-    this._decreaseAttempts();
     return {
-      number,
+      number: guess,
+      correct: true,
+      message: '🎉 Correct number!'
+    };
+  }
+
+  private _processIncorrectGuess(guess: number): GuessResult {
+    this._timerService.start();
+    this._decreaseAttempts();
+
+    return {
+      number: guess,
       correct: false,
-      message: number < this._secretNumber ? '📉 Too low!' : '📈 Too high!'
+      message: guess > this._secretNumber ? '📈 Too high!' : '📉 Too low!'
     };
   }
 
   private _generateSecretNumber(): number {
-    const secretNumber = Math.floor(Math.random() * 25) + 1;
-    return secretNumber;
+    return Math.floor(Math.random() * 25) + 1;
   }
 
   private _decreaseAttempts(): void {
     this._attempts.set(this._attempts() - 1);
   }
 
-  private _processCorrectGuess(): void {
-    this._timerService.stop();
-    this._score.set(this._calculateScore());
-  }
-
   private _calculateScore(): number {
     const minimumScore = 10;
-    const score = this._attempts() * 15 - this._timerService.time;
+    const score = this._attempts() * 15 - this._timerService.time();
     return score < minimumScore ? minimumScore : score;
   }
 }

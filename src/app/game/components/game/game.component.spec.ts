@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameComponent } from './game.component';
 import { GameService } from '@app/game/services/game.service';
-import { GuessCheck } from '@app/game/models/guess-check.model';
+import { GuessResult } from '@app/game/models/guess-result';
 
 describe('GameComponent', () => {
   let component: GameComponent;
@@ -62,7 +62,7 @@ describe('GameComponent', () => {
     });
 
     it('should call gameService to check the correct guess and update the secret number and game message', () => {
-      const guessCheckMock: GuessCheck = {
+      const guessCheckMock: GuessResult = {
         number: 5,
         correct: true,
         message: '🎉 Correct number!'

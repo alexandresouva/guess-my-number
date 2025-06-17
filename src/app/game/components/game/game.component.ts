@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+
 import { GameService } from '@app/game/services/game.service';
 import { TimerService } from '@app/game/services/timer.service';
 
@@ -18,9 +18,7 @@ export class GameComponent {
   protected readonly gameMessage = signal<string>('Start guessing...');
   protected readonly attempts = this._gameService.attempts;
   protected readonly score = this._gameService.score;
-  protected readonly time = toSignal(this._timerService.time$, {
-    initialValue: 0
-  });
+  protected readonly time = this._timerService.time;
 
   protected checkGuess(guess: string): void {
     if (!guess || isNaN(Number(guess))) {
@@ -28,7 +26,9 @@ export class GameComponent {
     }
 
     const { correct, message } = this._gameService.checkGuess(Number(guess));
-    if (correct) this.secretNumber.set(Number(guess));
+    if (correct) {
+      this.secretNumber.set(Number(guess));
+    }
     this.gameMessage.set(message);
   }
 }

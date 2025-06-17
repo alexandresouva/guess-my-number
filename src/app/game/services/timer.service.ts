@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 
-import { BehaviorSubject, interval, map, Subject, takeUntil } from 'rxjs';
+import { finalize, interval, map, Subject, takeUntil } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,24 +8,29 @@ import { BehaviorSubject, interval, map, Subject, takeUntil } from 'rxjs';
 export class TimerService {
   private readonly stop$ = new Subject<void>();
   private readonly reset$ = new Subject<void>();
-  private readonly _timeSubject = new BehaviorSubject(0);
-  time$ = this._timeSubject.asObservable();
+  private _playing = false;
 
-  get time(): number {
-    return this._timeSubject.value;
+  private readonly _time = signal(0);
+  time = this._time.asReadonly();
+
+  get currentTime(): number {
+    return this._time();
   }
 
   start(): void {
-    const startTimestamp = Date.now();
+    if (this._playing) return;
 
+    this._playing = true;
+    const startTimestamp = Date.now();
     interval(100)
       .pipe(
-        map(() => (Date.now() - startTimestamp) / 1000),
+        map(() => (Date.now() - startTimestamp) / 1000), // Convert to seconds
         takeUntil(this.stop$),
-        takeUntil(this.reset$)
+        takeUntil(this.reset$),
+        finalize(() => (this._playing = false))
       )
       .subscribe((elapsed) => {
-        this._timeSubject.next(elapsed);
+        this._time.set(elapsed);
       });
   }
 
@@ -35,6 +40,6 @@ export class TimerService {
 
   reset(): void {
     this.reset$.next();
-    this._timeSubject.next(0);
+    this._time.set(0);
   }
 }

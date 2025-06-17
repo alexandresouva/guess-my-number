@@ -1,10 +1,10 @@
-export type GuessCheckMessage =
+export type GuessFeedbackMessage =
   | '🎉 Correct number!'
   | '📈 Too high!'
   | '📉 Too low!';
 
-export type GuessCheck = {
+export type GuessResult = {
   number: number;
   correct: boolean;
-  message: GuessCheckMessage;
+  message: GuessFeedbackMessage;
 };
