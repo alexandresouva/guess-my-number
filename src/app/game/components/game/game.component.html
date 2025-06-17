@@ -1,7 +1,8 @@
 <header class="header">
-  <div data-testid="secret-number" class="header__secret-number">
+  <h1 class="header__title">Guess My Number!</h1>
+  <span data-testid="secret-number" class="header__secret-number">
     {{ secretNumber() }}
-  </div>
+  </span>
 </header>
 <main class="game-container">
   <section class="game-actions">
@@ -25,23 +26,25 @@
     <p data-testid="game-message" class="game-info__message">
       {{ gameMessage() }}
     </p>
-    <p class="game-info__attempts">
-      🕹️ Attempts:
-      <span data-testid="attempts-available">{{ attempts() }}</span>
-    </p>
-    <p class="game-info__score">
-      💯 Score:
-      <span data-testid="score">{{ score() | number: '1.0-0' }}</span>
-    </p>
-    <!-- TODO: Add highscore logic -->
-    <p class="game-info__highscore">
-      🥇 Highscore: <span data-testid="highscore">0</span>
-    </p>
-    <p class="game-info__timer">
-      ⏱️ Time:
-      <span data-testid="timer">
-        {{ time() | number: '1.2-2' }}
-      </span>
-    </p>
+    <div class="game-info__details">
+      <p class="game-info__attempts">
+        🕹️ Attempts:
+        <span data-testid="attempts-available">{{ attempts() }}</span>
+      </p>
+      <p class="game-info__timer">
+        ⏱️ Time:
+        <span data-testid="timer">
+          {{ time() | number: '1.2-2' }}
+        </span>
+      </p>
+      <p class="game-info__score">
+        💯 Score:
+        <span data-testid="score">{{ score() | number: '1.0-0' }}</span>
+      </p>
+      <!-- TODO: Add highscore logic -->
+      <p class="game-info__highscore">
+        🥇 Highscore: <span data-testid="highscore">0</span>
+      </p>
+    </div>
   </section>
 </main>

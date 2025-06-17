@@ -8,7 +8,11 @@ import { TimerService } from '@app/game/services/timer.service';
   selector: 'app-game',
   imports: [CommonModule],
   templateUrl: './game.component.html',
-  styleUrl: './game.component.scss'
+  styleUrl: './game.component.scss',
+  host: {
+    '[class.correct-game]': 'secretNumber() !== "?"',
+    '[attr.data-testid]': '"game-container"'
+  }
 })
 export class GameComponent {
   private readonly _gameService = inject(GameService);
