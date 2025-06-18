@@ -40,7 +40,7 @@ module.exports = function (config) {
         }
       }
     },
-    reporters: ['spec', 'kjhtml', 'coverage'],
+    reporters: ['spec', 'coverage'],
     specReporter: {
       maxLogLines: 5,
       suppressErrorSummary: false,
