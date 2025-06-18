@@ -3,11 +3,12 @@ Feature: Player makes a correct guess
 
   # Tip: The focus of BDD is to describe "what" and not "how" things work.
   Scenario: Player guesses the correct number
-  Given I am on the game page for guessing
-  When I guess the correct number
-  Then the message "🎉 Correct number!" is displayed
-    And the timer stops immediately
-    And the interface is updated to show the correct guess
-    And the secret number is revealed
-    And the final score is calculated and displayed
+    Given I am on the game page for guessing
+      And I have at least 1 attempt remaining
+    When I guess the correct number
+    Then the message "🎉 Correct number!" is displayed
+      And the timer stops immediately
+      And the interface updates to show the correct number
+      And the secret number is revealed
+      And the final score is calculated and displayed
 

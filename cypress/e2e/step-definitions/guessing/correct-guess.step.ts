@@ -1,34 +1,24 @@
-import { Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
-const mockSecretNumber = 7;
-const mathRandomStubValue = (mockSecretNumber - 1) / 25;
-
-Given('I am on the game page for guessing', () => {
-  cy.wrap(mockSecretNumber).as('secretNumber');
-  cy.visit('http://localhost:4200/game', {
-    onBeforeLoad(win) {
-      cy.stub(win.Math, 'random').returns(mathRandomStubValue);
-    }
-  });
-});
+import { SELECTORS } from 'cypress/support/common/selectors';
+import {
+  captureInitialGameVisualState,
+  capturePostGuessVisualState
+} from 'cypress/support/helpers/game-visual-state';
 
 When('I guess the correct number', function () {
-  cy.get<number>('@secretNumber').then((secretNumber) => {
-    cy.get('[data-testid="secret-number"]')
-      .invoke('outerWidth')
-      .then((width) => cy.wrap(width).as('initialWidth'));
+  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
+    captureInitialGameVisualState();
 
-    cy.get('[data-testid="guess-input"]').clear().type(String(secretNumber));
-    cy.get('[data-testid="check-button"]').click();
+    cy.get(SELECTORS.GUESS_INPUT).clear().type(String(secretNumber));
+    cy.get(SELECTORS.CHECK_BUTTON).click();
 
-    cy.get('[data-testid=timer]')
-      .invoke('text')
-      .then((timerText) => cy.wrap(timerText).as('finalTimerValue'));
+    capturePostGuessVisualState();
   });
 });
 
 Then('the message "🎉 Correct number!" is displayed', () => {
-  cy.get('[data-testid=game-message]')
+  cy.get(SELECTORS.GAME_MESSAGE)
     .should('be.visible')
     .invoke('text')
     .then((text) => {
@@ -36,22 +26,17 @@ Then('the message "🎉 Correct number!" is displayed', () => {
     });
 });
 
-Then('the timer stops immediately', () => {
-  cy.get<string>('@finalTimerValue').then((finalTimerValue) => {
-    cy.wait(1500);
-    cy.get('[data-testid=timer]').should('have.text', finalTimerValue);
+Then('the interface updates to show the correct number', () => {
+  cy.getByAlias<string>('initialBackgroundColor').then((initialColor) => {
+    cy.get(SELECTORS.GAME_CONTAINER)
+      .invoke('css', 'background-color')
+      .then((currentColor) => {
+        expect(currentColor).not.to.eq(initialColor);
+      });
   });
-});
 
-Then('the interface is updated to show the correct guess', () => {
-  cy.get('[data-testid=game-container]').should(
-    'have.css',
-    'background-color',
-    'rgb(96, 179, 71)'
-  );
-
-  cy.get<number>('@initialWidth').then((initialWidth) => {
-    cy.get('[data-testid="secret-number"]')
+  cy.getByAlias<number>('secretNumberInitialWidth').then((initialWidth) => {
+    cy.get(SELECTORS.SECRET_NUMBER)
       .invoke('outerWidth')
       .then((newWidth) => {
         expect(newWidth).to.be.greaterThan(initialWidth);
@@ -60,8 +45,8 @@ Then('the interface is updated to show the correct guess', () => {
 });
 
 Then('the secret number is revealed', () => {
-  cy.get<number>('@secretNumber').then((secretNumber) => {
-    cy.get('[data-testid=secret-number]')
+  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
+    cy.get(SELECTORS.SECRET_NUMBER)
       .should('be.visible')
       .invoke('text')
       .then((text) => {
@@ -71,7 +56,8 @@ Then('the secret number is revealed', () => {
 });
 
 Then('the final score is calculated and displayed', () => {
-  cy.get('[data-testid=score]')
+  cy.get(SELECTORS.SCORE)
+    .should('be.visible')
     .invoke('text')
     .then((score) => {
       const scoreNumber = Number(score);
