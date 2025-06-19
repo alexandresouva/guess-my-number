@@ -63,6 +63,7 @@ export class GameService {
   }
 
   private _updateHighscore(score: number): void {
-    throw new Error(`Method not implemented. Score: ${score}`);
+    if (score <= this._highscore()) return;
+    this._highscore.set(score);
   }
 }
