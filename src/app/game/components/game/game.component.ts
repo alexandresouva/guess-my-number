@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 
+import { GameMessage } from '@app/game/models/game-message.model';
 import { GameService } from '@app/game/services/game.service';
 import { TimerService } from '@app/game/services/timer.service';
 
@@ -19,7 +20,7 @@ export class GameComponent {
   private readonly _timerService = inject(TimerService);
 
   protected readonly secretNumber = signal<number | '?'>('?');
-  protected readonly gameMessage = signal<string>('Start guessing...');
+  protected readonly gameMessage = signal<GameMessage>('Start guessing...');
   protected readonly attempts = this._gameService.attempts;
   protected readonly score = this._gameService.score;
   protected readonly time = this._timerService.time;

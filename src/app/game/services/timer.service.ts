@@ -13,10 +13,6 @@ export class TimerService {
   private readonly _time = signal(0);
   time = this._time.asReadonly();
 
-  get currentTime(): number {
-    return this._time();
-  }
-
   start(): void {
     if (this._playing) return;
 

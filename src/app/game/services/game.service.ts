@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { GuessResult } from '../models/guess-result';
+import { GuessResult } from '../models/guess-result.model';
 import { TimerService } from './timer.service';
 
 @Injectable({

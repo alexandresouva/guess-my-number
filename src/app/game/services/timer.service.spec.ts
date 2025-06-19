@@ -51,4 +51,12 @@ describe('TimerService', () => {
     service.reset();
     expect(time()).toBe(0);
   }));
+
+  it('should not start if already started', fakeAsync(() => {
+    service.start();
+    service.start();
+    tick(500);
+    service.start();
+    expect(service.time()).toBe(0.5);
+  }));
 });

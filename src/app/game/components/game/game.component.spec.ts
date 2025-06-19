@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameComponent } from './game.component';
 import { GameService } from '@app/game/services/game.service';
-import { GuessResult } from '@app/game/models/guess-result';
+import { GuessResult } from '@app/game/models/guess-result.model';
 
 describe('GameComponent', () => {
   let component: GameComponent;
@@ -32,7 +32,7 @@ describe('GameComponent', () => {
   });
 
   describe('checkGuess', () => {
-    it('should update the game message and not call gameService to check the guess when an invalid input is entered', () => {
+    it('should update the game message and skip guess checking for invalid input', () => {
       const emptyInput = '';
       component['checkGuess'](emptyInput);
       expect(component['gameMessage']()).toBe('🤡 Choice a number');
@@ -44,7 +44,7 @@ describe('GameComponent', () => {
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
     });
 
-    it('should call gameService to check the guess when a valid input is entered and update the game message', () => {
+    it('should check the guess when a valid input is entered and update the game message', () => {
       const guess = '5';
       const initialMessage = component['gameMessage']();
 
@@ -62,16 +62,17 @@ describe('GameComponent', () => {
     });
 
     it('should call gameService to check the correct guess and update the secret number and game message', () => {
+      const guess = '5';
       const guessCheckMock: GuessResult = {
-        number: 5,
+        number: Number(guess),
         correct: true,
         message: '🎉 Correct number!'
       };
 
       gameServiceSpy.checkGuess.and.returnValue(guessCheckMock);
-      component['checkGuess'](guessCheckMock.number.toString());
+      component['checkGuess'](guess);
 
-      expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(5);
+      expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(Number(guess));
       expect(component['gameMessage']()).toBe('🎉 Correct number!');
       expect(component['secretNumber']()).toBe(guessCheckMock.number);
     });

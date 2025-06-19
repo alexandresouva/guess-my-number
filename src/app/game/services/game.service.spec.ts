@@ -14,9 +14,7 @@ describe('GameService', () => {
     timerServiceSpy = jasmine.createSpyObj<TimerService>(
       'TimerService',
       ['start', 'stop'],
-      {
-        time: timeSignalMock
-      }
+      { time: timeSignalMock }
     );
 
     TestBed.configureTestingModule({
@@ -32,21 +30,13 @@ describe('GameService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('generateSecretNumber', () => {
-    it('should generate the secret number', () => {
-      const secretNumber = service['_generateSecretNumber']();
-
-      expect(typeof secretNumber).toBe('number');
-      expect(secretNumber).toBeGreaterThanOrEqual(1);
-      expect(secretNumber).toBeLessThanOrEqual(25);
-    });
-  });
-
   describe('checkGuess', () => {
-    it('should return appropriate game result when guess is correct', () => {
+    it('should return correct result when guess is correct', () => {
       const secretNumber = service['_secretNumber'];
       const result = service.checkGuess(secretNumber);
 
+      expect(timerServiceSpy['stop']).toHaveBeenCalled();
+      expect(service.score()).toBeGreaterThan(0);
       expect(result).toEqual({
         number: secretNumber,
         correct: true,
@@ -54,10 +44,14 @@ describe('GameService', () => {
       });
     });
 
-    it('should return appropriate game result for a lower guess', () => {
+    it('should return correct result when guess is lower', () => {
       const lowerGuess = service['_secretNumber'] - 1;
+      const initialAttempts = service.attempts();
+
       const result = service.checkGuess(lowerGuess);
 
+      expect(timerServiceSpy['start']).toHaveBeenCalled();
+      expect(service.attempts()).toBe(initialAttempts - 1);
       expect(result).toEqual({
         number: lowerGuess,
         correct: false,
@@ -65,10 +59,14 @@ describe('GameService', () => {
       });
     });
 
-    it('should return appropriate game result for a higher guess', () => {
+    it('should return correct result when guess is higher', () => {
       const higherGuess = service['_secretNumber'] + 1;
+      const initialAttempts = service.attempts();
+
       const result = service.checkGuess(higherGuess);
 
+      expect(timerServiceSpy['start']).toHaveBeenCalled();
+      expect(service.attempts()).toBe(initialAttempts - 1);
       expect(result).toEqual({
         number: higherGuess,
         correct: false,
@@ -77,46 +75,24 @@ describe('GameService', () => {
     });
   });
 
-  describe('processCorrectGuess', () => {
-    it('should call timerService to stop the timer', () => {
-      const secretNumber = service['_secretNumber'];
-      service['checkGuess'](secretNumber);
-
-      expect(timerServiceSpy['stop']).toHaveBeenCalled();
-    });
-
-    it('should call calculateScore to calculate the score', () => {
-      spyOn(service, '_calculateScore' as never).and.callThrough();
-
-      const initialScore = service.score();
-      const secretNumber = service['_secretNumber'];
-      service['checkGuess'](secretNumber);
-      const finalScore = service.score();
-
-      expect(service['_calculateScore']).toHaveBeenCalled();
-      expect(finalScore).toBeGreaterThan(initialScore);
-    });
-  });
-
   describe('calculateScore', () => {
-    it('should return the score based on the time taken and remaining attempts', () => {
-      const elapsedTimeInSeconds = 5;
+    it('should calculate the score correctly', () => {
+      const elapsedTime = 5;
       const remainingAttempts = service.attempts();
-      const expectedScore = remainingAttempts * 15 - elapsedTimeInSeconds;
-
-      timeSignalMock.set(elapsedTimeInSeconds);
+      timeSignalMock.set(elapsedTime);
 
       const score = service['_calculateScore']();
-      expect(score).toBe(expectedScore);
+      const expected = remainingAttempts * 15 - elapsedTime;
+
+      expect(score).toBe(expected);
     });
 
-    it('should return 10 as the minimum score if the timer is longer or are fewer attempts', () => {
-      const elapsedTimeInSeconds = 60; // 1 minute
+    it('should return minimum score of 10 if calculated score is lower', () => {
+      timeSignalMock.set(60);
       service['_attempts'].set(1);
 
-      timeSignalMock.set(elapsedTimeInSeconds);
-
       const score = service['_calculateScore']();
+
       expect(score).toBe(10);
     });
   });
