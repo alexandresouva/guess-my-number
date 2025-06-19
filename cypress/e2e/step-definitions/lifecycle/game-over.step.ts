@@ -1,6 +1,7 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import { SELECTORS } from 'cypress/support/common/selectors';
+import { capturePostGuessVisualState } from 'cypress/support/helpers/game-visual-state';
 
 Given('I have used all 5 attempts without guessing correctly', () => {
   const attempts = 5;
@@ -9,6 +10,7 @@ Given('I have used all 5 attempts without guessing correctly', () => {
     cy.get(SELECTORS.CHECK_BUTTON).click();
   });
 
+  capturePostGuessVisualState();
   cy.get(SELECTORS.ATTEMPTS).should('have.text', '0');
 });
 

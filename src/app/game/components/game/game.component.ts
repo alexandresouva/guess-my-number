@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal, untracked } from '@angular/core';
 
 import { GameMessage } from '@app/game/models/game-message.model';
 import { GameService } from '@app/game/services/game.service';
@@ -26,6 +26,19 @@ export class GameComponent {
   protected readonly attempts = this._gameService.attempts;
   protected readonly score = this._gameService.score;
   protected readonly highscore = this._gameService.highscore;
+  protected readonly gameOver = this._gameService.gameOver;
+
+  constructor() {
+    effect(() => {
+      const gameOver = this._gameService.gameOver();
+      if (!gameOver) return;
+
+      untracked(() => {
+        this.gameMessage.set('🫤 Game over...');
+        this.secretNumber.set(this._gameService.secretNumber);
+      });
+    });
+  }
 
   protected checkGuess(guess: string): void {
     if (!guess || isNaN(Number(guess))) {

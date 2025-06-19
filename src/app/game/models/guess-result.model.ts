@@ -1,7 +1,8 @@
 export type GuessFeedbackMessage =
-  | '🎉 Correct number!'
   | '📈 Too high!'
-  | '📉 Too low!';
+  | '📉 Too low!'
+  | '🎉 Correct number!'
+  | '🫤 Game over...';
 
 export type GuessResult = {
   number: number;

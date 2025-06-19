@@ -26,6 +26,10 @@ export class GameService {
     return this._processIncorrectGuess(guess);
   }
 
+  get secretNumber(): number {
+    return this._secretNumber;
+  }
+
   private _processCorrectGuess(guess: number): GuessResult {
     this._timerService.stop();
     const score = this._calculateScore();
@@ -43,10 +47,24 @@ export class GameService {
     this._timerService.start();
     this._decreaseAttempts();
 
+    const isGameOver = this._attempts() === 0;
+    if (isGameOver) return this._processGameOver(guess);
+
     return {
       number: guess,
       correct: false,
       message: guess > this._secretNumber ? '📈 Too high!' : '📉 Too low!'
+    };
+  }
+
+  private _processGameOver(guess: number): GuessResult {
+    this._gameOver.set(true);
+    this._timerService.stop();
+
+    return {
+      number: guess,
+      correct: false,
+      message: '🫤 Game over...'
     };
   }
 

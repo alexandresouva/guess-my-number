@@ -11,12 +11,14 @@
       data-testid="guess-input"
       class="game-actions__guess"
       aria-label="Enter your guess"
+      [disabled]="gameOver()"
       #guessInput
     />
     <button
       type="button"
       data-testid="check-button"
       class="game-actions__check"
+      [disabled]="gameOver()"
       (click)="checkGuess(guessInput.value)"
     >
       Check!
