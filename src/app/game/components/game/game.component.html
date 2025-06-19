@@ -41,9 +41,8 @@
         💯 Score:
         <span data-testid="score">{{ score() | number: '1.0-0' }}</span>
       </p>
-      <!-- TODO: Add highscore logic -->
       <p class="game-info__highscore">
-        🥇 Highscore: <span data-testid="highscore">0</span>
+        🥇 Highscore: <span data-testid="highscore">{{ highscore() }}</span>
       </p>
     </div>
   </section>

@@ -11,9 +11,11 @@ export class GameService {
   private readonly _secretNumber = this._generateSecretNumber();
   private readonly _attempts = signal(5);
   private readonly _score = signal(0);
+  private readonly _highscore = signal(0);
 
   attempts = this._attempts.asReadonly();
   score = this._score.asReadonly();
+  highscore = this._highscore.asReadonly();
 
   checkGuess(guess: number): GuessResult {
     const isCorrectGuess = guess === this._secretNumber;
@@ -24,7 +26,9 @@ export class GameService {
 
   private _processCorrectGuess(guess: number): GuessResult {
     this._timerService.stop();
-    this._score.set(this._calculateScore());
+    const score = this._calculateScore();
+    this._score.set(score);
+    this._updateHighscore(score);
 
     return {
       number: guess,
@@ -56,5 +60,9 @@ export class GameService {
     const minimumScore = 10;
     const score = this._attempts() * 15 - this._timerService.time();
     return score < minimumScore ? minimumScore : score;
+  }
+
+  private _updateHighscore(score: number): void {
+    throw new Error(`Method not implemented. Score: ${score}`);
   }
 }

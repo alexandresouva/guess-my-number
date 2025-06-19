@@ -21,9 +21,11 @@ export class GameComponent {
 
   protected readonly secretNumber = signal<number | '?'>('?');
   protected readonly gameMessage = signal<GameMessage>('Start guessing...');
+
+  protected readonly time = this._timerService.time;
   protected readonly attempts = this._gameService.attempts;
   protected readonly score = this._gameService.score;
-  protected readonly time = this._timerService.time;
+  protected readonly highscore = this._gameService.highscore;
 
   protected checkGuess(guess: string): void {
     if (!guess || isNaN(Number(guess))) {

@@ -31,12 +31,19 @@ describe('GameService', () => {
   });
 
   describe('checkGuess', () => {
+    beforeEach(() => {
+      service['_highscore'].set(0);
+    });
+
     it('should return correct result when guess is correct', () => {
       const secretNumber = service['_secretNumber'];
+      const initialHighscore = service.highscore();
+
       const result = service.checkGuess(secretNumber);
 
       expect(timerServiceSpy['stop']).toHaveBeenCalled();
-      expect(service.score()).toBeGreaterThan(0);
+      expect(service.score()).toBeGreaterThanOrEqual(10);
+      expect(service.highscore()).toBeGreaterThanOrEqual(initialHighscore);
       expect(result).toEqual({
         number: secretNumber,
         correct: true,
@@ -75,6 +82,18 @@ describe('GameService', () => {
     });
   });
 
+  describe('_generateSecretNumber', () => {
+    it('should always have a secret number between 1 and 25', () => {
+      const qtdChecks = 10;
+
+      for (let i = 0; i < qtdChecks; i++) {
+        const secretNumber = service['_generateSecretNumber']();
+        expect(secretNumber).toBeGreaterThanOrEqual(1);
+        expect(secretNumber).toBeLessThanOrEqual(25);
+      }
+    });
+  });
+
   describe('calculateScore', () => {
     it('should calculate the score correctly', () => {
       const elapsedTime = 5;
@@ -94,6 +113,26 @@ describe('GameService', () => {
       const score = service['_calculateScore']();
 
       expect(score).toBe(10);
+    });
+  });
+
+  describe('updateHighscore', () => {
+    it('should update highscore if the current score is higher', () => {
+      const currentHighscore = service.highscore();
+      const newHighscoreHigherThanCurrent = currentHighscore + 10;
+
+      service['_updateHighscore'](newHighscoreHigherThanCurrent);
+
+      expect(service.highscore()).toBe(newHighscoreHigherThanCurrent);
+    });
+
+    it('should not update highscore if the current score is lower', () => {
+      const initialHighscore = 100;
+
+      service['_highscore'].set(initialHighscore);
+      service['_updateHighscore'](initialHighscore - 10);
+
+      expect(service.highscore()).toBe(initialHighscore);
     });
   });
 });

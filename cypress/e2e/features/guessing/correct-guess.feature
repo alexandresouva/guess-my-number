@@ -11,4 +11,5 @@ Feature: Player makes a correct guess
       And the interface updates to show the correct number
       And the secret number is revealed
       And the final score is calculated and displayed
+      And the high score is updated if necessary
 

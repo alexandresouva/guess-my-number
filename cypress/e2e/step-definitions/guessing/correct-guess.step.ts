@@ -5,10 +5,15 @@ import {
   captureInitialGameVisualState,
   capturePostGuessVisualState
 } from 'cypress/support/helpers/game-visual-state';
+import {
+  captureFinalScore,
+  captureHighscore
+} from 'cypress/support/helpers/score';
 
 When('I guess the correct number', function () {
   cy.getByAlias<number>('secretNumber').then((secretNumber) => {
     captureInitialGameVisualState();
+    captureHighscore();
 
     cy.get(SELECTORS.GUESS_INPUT).clear().type(String(secretNumber));
     cy.get(SELECTORS.CHECK_BUTTON).click();
@@ -63,4 +68,22 @@ Then('the final score is calculated and displayed', () => {
       const scoreNumber = Number(score);
       expect(scoreNumber).to.be.a('number').and.to.be.greaterThan(10);
     });
+});
+
+Then('the high score is updated if necessary', () => {
+  captureFinalScore();
+  cy.getByAlias<number>('finalScore').then((finalScore) => {
+    cy.getByAlias<number>('previousHighscore').then((previousHighscore) => {
+      cy.get(SELECTORS.HIGHSCORE)
+        .should('be.visible')
+        .invoke('text')
+        .then((highscoreText) => {
+          const highscore = Number(highscoreText.trim());
+          const expectedHighscore = Math.max(finalScore, previousHighscore);
+
+          expect(highscore).to.be.a('number');
+          expect(highscore).to.eq(expectedHighscore);
+        });
+    });
+  });
 });
