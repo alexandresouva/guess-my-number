@@ -49,17 +49,6 @@ Then('the interface updates to show the correct number', () => {
   });
 });
 
-Then('the secret number is revealed', () => {
-  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
-    cy.get(SELECTORS.SECRET_NUMBER)
-      .should('be.visible')
-      .invoke('text')
-      .then((text) => {
-        expect(text.trim()).to.eq(String(secretNumber));
-      });
-  });
-});
-
 Then('the final score is calculated and displayed', () => {
   cy.get(SELECTORS.SCORE)
     .should('be.visible')

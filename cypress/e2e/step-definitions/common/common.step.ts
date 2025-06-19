@@ -31,3 +31,14 @@ Then('the timer stops immediately', () => {
     cy.get(SELECTORS.TIMER).should('have.text', finalTimerValue);
   });
 });
+
+Then('the secret number is revealed', () => {
+  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
+    cy.get(SELECTORS.SECRET_NUMBER)
+      .should('be.visible')
+      .invoke('text')
+      .then((text) => {
+        expect(text.trim()).to.eq(String(secretNumber));
+      });
+  });
+});
