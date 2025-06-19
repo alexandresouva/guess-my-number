@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { signal } from '@angular/core';
 
-import { GameComponent } from './game.component';
 import { GameService } from '@app/game/services/game.service';
 import { GuessResult } from '@app/game/models/guess-result.model';
+import { GameComponent } from './game.component';
+
+const gameOverSignalMock = signal(false);
 
 describe('GameComponent', () => {
   let component: GameComponent;
@@ -11,11 +14,16 @@ describe('GameComponent', () => {
   let gameServiceSpy: jasmine.SpyObj<GameService>;
 
   beforeEach(async () => {
-    gameServiceSpy = jasmine.createSpyObj<GameService>('GameService', [
-      'checkGuess',
-      'attempts',
-      'score'
-    ]);
+    gameServiceSpy = jasmine.createSpyObj<GameService>(
+      'GameService',
+      ['checkGuess'],
+      {
+        gameOver: gameOverSignalMock,
+        attempts: signal(5),
+        score: signal(0),
+        highscore: signal(0)
+      }
+    );
 
     await TestBed.configureTestingModule({
       imports: [GameComponent],
@@ -75,6 +83,40 @@ describe('GameComponent', () => {
       expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(Number(guess));
       expect(component['gameMessage']()).toBe('🎉 Correct number!');
       expect(component['secretNumber']()).toBe(guessCheckMock.number);
+    });
+  });
+
+  describe('gameOver', () => {
+    let nativeElement: HTMLElement;
+    let checkButton: HTMLButtonElement;
+    let guessInput: HTMLInputElement;
+
+    beforeEach(() => {
+      nativeElement = fixture.nativeElement as HTMLElement;
+      checkButton = nativeElement.querySelector(
+        `[data-testid="check-button"]`
+      ) as HTMLButtonElement;
+
+      guessInput = nativeElement.querySelector(
+        '[data-testid="guess-input"]'
+      ) as HTMLInputElement;
+    });
+
+    it('should update the game message, disable the check button and guess input when the gameOver is true', () => {
+      gameOverSignalMock.set(true);
+      fixture.detectChanges();
+
+      expect(component['gameMessage']()).toBe('🫤 Game over...');
+      expect(checkButton.disabled).toBe(true);
+      expect(guessInput.disabled).toBe(true);
+    });
+
+    it('should not disable the check button and guess input when the gameOver is false', () => {
+      gameOverSignalMock.set(false);
+      fixture.detectChanges();
+
+      expect(checkButton.disabled).toBe(false);
+      expect(guessInput.disabled).toBe(false);
     });
   });
 });

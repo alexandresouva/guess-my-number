@@ -12,10 +12,12 @@ export class GameService {
   private readonly _attempts = signal(5);
   private readonly _score = signal(0);
   private readonly _highscore = signal(0);
+  private readonly _gameOver = signal(false);
 
   attempts = this._attempts.asReadonly();
   score = this._score.asReadonly();
   highscore = this._highscore.asReadonly();
+  gameOver = this._gameOver.asReadonly();
 
   checkGuess(guess: number): GuessResult {
     const isCorrectGuess = guess === this._secretNumber;

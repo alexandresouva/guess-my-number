@@ -135,4 +135,24 @@ describe('GameService', () => {
       expect(service.highscore()).toBe(initialHighscore);
     });
   });
+
+  describe('gameOver', () => {
+    it('should update gameOver to true if attempts are 0', () => {
+      const attempts = 5;
+      for (let i = 0; i < attempts; i++) {
+        service.checkGuess(100); // wrong guess
+      }
+
+      expect(service.gameOver()).toBe(true);
+    });
+
+    it('should be false if attempts are greater than 0', () => {
+      const attempts = 4;
+      for (let i = 0; i < attempts; i++) {
+        service.checkGuess(100); // wrong guess
+      }
+
+      expect(service.gameOver()).toBe(false);
+    });
+  });
 });
