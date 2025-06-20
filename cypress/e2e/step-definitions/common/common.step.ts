@@ -34,6 +34,10 @@ Given('I have at least 2 attempts remaining', () => {
     });
 });
 
+Given(`I click the "Restart" button`, () => {
+  cy.get(SELECTORS.RESTART_BUTTON).click();
+});
+
 Then('my remaining attempts decrease by 1', () => {
   cy.get(SELECTORS.ATTEMPTS)
     .invoke('text')
@@ -76,5 +80,33 @@ Then('the secret number is revealed', () => {
       cy.getByAlias<number>('secretNumber').then((secretNumber) => {
         expect(text.trim()).to.eq(String(secretNumber));
       });
+    });
+});
+
+Then('the game resets', () => {
+  cy.get(SELECTORS.SECRET_NUMBER)
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.eq('?');
+    });
+  cy.get(SELECTORS.ATTEMPTS)
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.eq('5');
+    });
+  cy.get(SELECTORS.TIMER)
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.eq('0');
+    });
+  cy.get(SELECTORS.SCORE)
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.eq('0');
+    });
+  cy.get(SELECTORS.GAME_MESSAGE)
+    .invoke('text')
+    .then((text) => {
+      expect(text.trim()).to.eq('Start guessing...');
     });
 });
