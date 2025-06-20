@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 
 import { GameService } from '@app/game/services/game.service';
-import { GuessResult } from '@app/game/models/guess-result.model';
 import { GameComponent } from './game.component';
 
 const gameOverSignalMock = signal(false);
+const attemptsSignalMock = signal(5);
 
 describe('GameComponent', () => {
   let component: GameComponent;
@@ -19,7 +19,8 @@ describe('GameComponent', () => {
       ['checkGuess'],
       {
         gameOver: gameOverSignalMock,
-        attempts: signal(5),
+        attempts: attemptsSignalMock,
+        secretNumber: signal(0),
         score: signal(0),
         highscore: signal(0)
       }
@@ -57,7 +58,6 @@ describe('GameComponent', () => {
       const initialMessage = component['gameMessage']();
 
       gameServiceSpy.checkGuess.and.returnValue({
-        number: Number(guess),
         correct: false,
         message: '📈 Too high!'
       });
@@ -67,22 +67,6 @@ describe('GameComponent', () => {
       expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(Number(guess));
       expect(finalMessage).not.toBe(initialMessage);
       expect(finalMessage).toBe('📈 Too high!');
-    });
-
-    it('should call gameService to check the correct guess and update the secret number and game message', () => {
-      const guess = '5';
-      const guessCheckMock: GuessResult = {
-        number: Number(guess),
-        correct: true,
-        message: '🎉 Correct number!'
-      };
-
-      gameServiceSpy.checkGuess.and.returnValue(guessCheckMock);
-      component['checkGuess'](guess);
-
-      expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(Number(guess));
-      expect(component['gameMessage']()).toBe('🎉 Correct number!');
-      expect(component['secretNumber']()).toBe(guessCheckMock.number);
     });
   });
 
@@ -104,6 +88,12 @@ describe('GameComponent', () => {
 
     it('should update the game message, disable the check button and guess input when the gameOver is true', () => {
       gameOverSignalMock.set(true);
+      gameServiceSpy.checkGuess.and.returnValue({
+        correct: false,
+        message: '🫤 Game over...'
+      });
+
+      component['checkGuess']('5');
       fixture.detectChanges();
 
       expect(component['gameMessage']()).toBe('🫤 Game over...');

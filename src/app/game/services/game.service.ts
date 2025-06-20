@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { GuessResult } from '../models/guess-result.model';
 import { TimerService } from './timer.service';
 
@@ -8,36 +8,34 @@ import { TimerService } from './timer.service';
 export class GameService {
   private readonly _timerService = inject(TimerService);
 
-  private readonly _secretNumber = this._generateSecretNumber();
+  private readonly _secretNumber = signal(this._generateSecretNumber());
   private readonly _attempts = signal(5);
   private readonly _score = signal(0);
   private readonly _highscore = signal(0);
-  private readonly _gameOver = signal(false);
 
-  attempts = this._attempts.asReadonly();
-  score = this._score.asReadonly();
-  highscore = this._highscore.asReadonly();
-  gameOver = this._gameOver.asReadonly();
+  readonly gameOver = computed(() => {
+    return this._attempts() === 0 || this.score() > 0;
+  });
+  readonly secretNumber = this._secretNumber.asReadonly();
+  readonly attempts = this._attempts.asReadonly();
+  readonly score = this._score.asReadonly();
+  readonly highscore = this._highscore.asReadonly();
 
   checkGuess(guess: number): GuessResult {
-    const isCorrectGuess = guess === this._secretNumber;
-    if (isCorrectGuess) return this._processCorrectGuess(guess);
+    const isCorrectGuess = guess === this._secretNumber();
+    if (isCorrectGuess) return this._processCorrectGuess();
 
     return this._processIncorrectGuess(guess);
   }
 
-  get secretNumber(): number {
-    return this._secretNumber;
-  }
-
-  private _processCorrectGuess(guess: number): GuessResult {
+  private _processCorrectGuess(): GuessResult {
     this._timerService.stop();
+
     const score = this._calculateScore();
     this._score.set(score);
     this._updateHighscore(score);
 
     return {
-      number: guess,
       correct: true,
       message: '🎉 Correct number!'
     };
@@ -47,22 +45,18 @@ export class GameService {
     this._timerService.start();
     this._decreaseAttempts();
 
-    const isGameOver = this._attempts() === 0;
-    if (isGameOver) return this._processGameOver(guess);
+    if (this.gameOver()) return this._processGameOver();
 
     return {
-      number: guess,
       correct: false,
-      message: guess > this._secretNumber ? '📈 Too high!' : '📉 Too low!'
+      message: guess > this._secretNumber() ? '📈 Too high!' : '📉 Too low!'
     };
   }
 
-  private _processGameOver(guess: number): GuessResult {
-    this._gameOver.set(true);
+  private _processGameOver(): GuessResult {
     this._timerService.stop();
 
     return {
-      number: guess,
       correct: false,
       message: '🫤 Game over...'
     };

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, effect, inject, signal, untracked } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 
 import { GameMessage } from '@app/game/models/game-message.model';
 import { GameService } from '@app/game/services/game.service';
@@ -11,7 +11,7 @@ import { TimerService } from '@app/game/services/timer.service';
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
   host: {
-    '[class.correct-game]': 'secretNumber() !== "?"',
+    '[class.correct-game]': 'score() > 0',
     '[attr.data-testid]': '"game-container"'
   }
 })
@@ -19,7 +19,9 @@ export class GameComponent {
   private readonly _gameService = inject(GameService);
   private readonly _timerService = inject(TimerService);
 
-  protected readonly secretNumber = signal<number | '?'>('?');
+  protected readonly secretNumber = computed(() =>
+    this.gameOver() ? this._gameService.secretNumber() : '?'
+  );
   protected readonly gameMessage = signal<GameMessage>('Start guessing...');
 
   protected readonly time = this._timerService.time;
@@ -28,27 +30,12 @@ export class GameComponent {
   protected readonly highscore = this._gameService.highscore;
   protected readonly gameOver = this._gameService.gameOver;
 
-  constructor() {
-    effect(() => {
-      const gameOver = this._gameService.gameOver();
-      if (!gameOver) return;
-
-      untracked(() => {
-        this.gameMessage.set('🫤 Game over...');
-        this.secretNumber.set(this._gameService.secretNumber);
-      });
-    });
-  }
-
   protected checkGuess(guess: string): void {
     if (!guess || isNaN(Number(guess))) {
       return this.gameMessage.set('🤡 Choice a number');
     }
 
-    const { correct, message } = this._gameService.checkGuess(Number(guess));
-    if (correct) {
-      this.secretNumber.set(Number(guess));
-    }
+    const { message } = this._gameService.checkGuess(Number(guess));
     this.gameMessage.set(message);
   }
 }

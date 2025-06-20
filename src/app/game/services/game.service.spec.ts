@@ -39,20 +39,19 @@ describe('GameService', () => {
       const secretNumber = service['_secretNumber'];
       const initialHighscore = service.highscore();
 
-      const result = service.checkGuess(secretNumber);
+      const result = service.checkGuess(secretNumber());
 
       expect(timerServiceSpy['stop']).toHaveBeenCalled();
       expect(service.score()).toBeGreaterThanOrEqual(10);
       expect(service.highscore()).toBeGreaterThanOrEqual(initialHighscore);
       expect(result).toEqual({
-        number: secretNumber,
         correct: true,
         message: '🎉 Correct number!'
       });
     });
 
     it('should return correct result when guess is lower', () => {
-      const lowerGuess = service['_secretNumber'] - 1;
+      const lowerGuess = service['_secretNumber']() - 1;
       const initialAttempts = service.attempts();
 
       const result = service.checkGuess(lowerGuess);
@@ -60,14 +59,13 @@ describe('GameService', () => {
       expect(timerServiceSpy['start']).toHaveBeenCalled();
       expect(service.attempts()).toBe(initialAttempts - 1);
       expect(result).toEqual({
-        number: lowerGuess,
         correct: false,
         message: '📉 Too low!'
       });
     });
 
     it('should return correct result when guess is higher', () => {
-      const higherGuess = service['_secretNumber'] + 1;
+      const higherGuess = service['_secretNumber']() + 1;
       const initialAttempts = service.attempts();
 
       const result = service.checkGuess(higherGuess);
@@ -75,7 +73,6 @@ describe('GameService', () => {
       expect(timerServiceSpy['start']).toHaveBeenCalled();
       expect(service.attempts()).toBe(initialAttempts - 1);
       expect(result).toEqual({
-        number: higherGuess,
         correct: false,
         message: '📈 Too high!'
       });

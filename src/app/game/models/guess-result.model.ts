@@ -5,7 +5,6 @@ export type GuessFeedbackMessage =
   | '🫤 Game over...';
 
 export type GuessResult = {
-  number: number;
   correct: boolean;
   message: GuessFeedbackMessage;
 };
