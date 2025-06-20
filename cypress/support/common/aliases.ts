@@ -1,10 +1,19 @@
-export type AliasValues = (typeof ALIASES)[keyof typeof ALIASES];
+export type GameAlias = (typeof ALIASES)[keyof typeof ALIASES];
 
 export const ALIASES = {
-  INITIAL_BACKGROUND_COLOR: 'initialBackgroundColor',
-  SECRET_NUMBER: 'secretNumber',
-  SECRET_NUMBER_INITIAL_WIDTH: 'secretNumberInitialWidth',
-  PREVIOUS_HIGHSCORE: 'previousHighscore',
+  // Styles
+  PREVIOUS_BACKGROUND_COLOR: 'previousBackgroundColor',
+  PREVIOUS_SECRET_NUMBER_WIDTH: 'previousSecretNumberWidth',
+
+  // Score
   FINAL_SCORE: 'finalScore',
-  FINAL_TIMER: 'finalTimer'
+  PREVIOUS_HIGHSCORE: 'previousHighscore',
+
+  // Timer
+  PREVIOUS_TIMER: 'previousTimer',
+  FINAL_TIMER: 'finalTimer',
+
+  // Guess
+  SECRET_NUMBER: 'secretNumber',
+  PREVIOUS_ATTEMPTS: 'previousAttempts'
 } as const;

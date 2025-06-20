@@ -1,7 +1,8 @@
 import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { ALIASES } from 'cypress/support/common/aliases';
 
 import { SELECTORS } from 'cypress/support/common/selectors';
-import { capturePostGuessVisualState } from 'cypress/support/helpers/game-visual-state';
+import { captureTextAndSaveAsAlias } from 'cypress/support/helpers/capture-and-wrap';
 
 Given('I have used all 5 attempts without guessing correctly', () => {
   const attempts = 5;
@@ -9,9 +10,9 @@ Given('I have used all 5 attempts without guessing correctly', () => {
     cy.get(SELECTORS.GUESS_INPUT).clear().type('100');
     cy.get(SELECTORS.CHECK_BUTTON).click();
   });
-
-  capturePostGuessVisualState();
   cy.get(SELECTORS.ATTEMPTS).should('have.text', '0');
+
+  captureTextAndSaveAsAlias(SELECTORS.TIMER, ALIASES.FINAL_TIMER);
 });
 
 Then('the message "🫤 Game over..." is displayed', () => {

@@ -1,25 +1,20 @@
 import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
+import { ALIASES } from 'cypress/support/common/aliases';
 import { SELECTORS } from 'cypress/support/common/selectors';
-import {
-  captureInitialGameVisualState,
-  capturePostGuessVisualState
-} from 'cypress/support/helpers/game-visual-state';
-import {
-  captureFinalScore,
-  captureHighscore
-} from 'cypress/support/helpers/score';
+import { captureTextAndSaveAsAlias } from 'cypress/support/helpers/capture-and-wrap';
+import { captureGameStyles } from 'cypress/support/helpers/capture-game-style';
 
 When('I guess the correct number', function () {
-  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
-    captureInitialGameVisualState();
-    captureHighscore();
+  captureGameStyles();
+  captureTextAndSaveAsAlias(SELECTORS.HIGHSCORE, ALIASES.PREVIOUS_HIGHSCORE);
 
+  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
     cy.get(SELECTORS.GUESS_INPUT).clear().type(String(secretNumber));
     cy.get(SELECTORS.CHECK_BUTTON).click();
-
-    capturePostGuessVisualState();
   });
+
+  captureTextAndSaveAsAlias(SELECTORS.TIMER, ALIASES.FINAL_TIMER);
 });
 
 Then('the message "🎉 Correct number!" is displayed', () => {
@@ -32,24 +27,26 @@ Then('the message "🎉 Correct number!" is displayed', () => {
 });
 
 Then('the interface updates to show the correct number', () => {
-  cy.getByAlias<string>('initialBackgroundColor').then((initialColor) => {
-    cy.get(SELECTORS.GAME_CONTAINER)
-      .invoke('css', 'background-color')
-      .then((currentColor) => {
-        expect(currentColor).not.to.eq(initialColor);
+  cy.get(SELECTORS.GAME_CONTAINER)
+    .invoke('css', 'background-color')
+    .then((currentColor) => {
+      cy.getByAlias<string>('previousBackgroundColor').then((previousColor) => {
+        expect(currentColor).not.to.eq(previousColor);
       });
-  });
+    });
 
-  cy.getByAlias<number>('secretNumberInitialWidth').then((initialWidth) => {
-    cy.get(SELECTORS.SECRET_NUMBER)
-      .invoke('outerWidth')
-      .then((newWidth) => {
-        expect(newWidth).to.be.greaterThan(initialWidth);
-      });
-  });
+  cy.get(SELECTORS.SECRET_NUMBER)
+    .invoke('outerWidth')
+    .then((newWidth) => {
+      cy.getByAlias<number>('previousSecretNumberWidth').then(
+        (previousWidth) => {
+          expect(newWidth).to.be.greaterThan(previousWidth);
+        }
+      );
+    });
 });
 
-Then('the final score is calculated and displayed', () => {
+Then('the final score is displayed', () => {
   cy.get(SELECTORS.SCORE)
     .should('be.visible')
     .invoke('text')
@@ -60,19 +57,20 @@ Then('the final score is calculated and displayed', () => {
 });
 
 Then('the high score is updated if necessary', () => {
-  captureFinalScore();
-  cy.getByAlias<number>('finalScore').then((finalScore) => {
-    cy.getByAlias<number>('previousHighscore').then((previousHighscore) => {
-      cy.get(SELECTORS.HIGHSCORE)
-        .should('be.visible')
-        .invoke('text')
-        .then((highscoreText) => {
-          const highscore = Number(highscoreText.trim());
-          const expectedHighscore = Math.max(finalScore, previousHighscore);
+  captureTextAndSaveAsAlias(SELECTORS.SCORE, ALIASES.FINAL_SCORE);
 
-          expect(highscore).to.be.a('number');
+  cy.get(SELECTORS.HIGHSCORE)
+    .should('be.visible')
+    .invoke('text')
+    .then((highscoreText) => {
+      const highscore = Number(highscoreText.trim());
+      expect(highscore).to.be.a('number');
+
+      cy.getByAlias<number>('finalScore').then((finalScore) => {
+        cy.getByAlias<number>('previousHighscore').then((previousHighscore) => {
+          const expectedHighscore = Math.max(finalScore, previousHighscore);
           expect(highscore).to.eq(expectedHighscore);
         });
+      });
     });
-  });
 });

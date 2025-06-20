@@ -10,6 +10,6 @@ Feature: Player makes a correct guess
       And the timer stops immediately
       And the interface updates to show the correct number
       And the secret number is revealed
-      And the final score is calculated and displayed
+      And the final score is displayed
       And the high score is updated if necessary
 

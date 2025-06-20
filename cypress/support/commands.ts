@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import { AliasValues } from './common/aliases';
+import { GameAlias } from './common/aliases';
 
 declare global {
   namespace Cypress {
     interface Chainable {
-      getByAlias<T>(alias: AliasValues): Chainable<T>;
+      getByAlias<T>(alias: GameAlias): Chainable<T>;
     }
   }
 }

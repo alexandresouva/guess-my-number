@@ -21,24 +21,60 @@ Given('I have at least 1 attempt remaining', () => {
     .invoke('text')
     .then((text) => {
       const attempts = Number(text.trim());
-      expect(attempts).to.be.greaterThan(0);
+      expect(attempts).to.be.gte(1);
+    });
+});
+
+Given('I have at least 2 attempts remaining', () => {
+  cy.get(SELECTORS.ATTEMPTS)
+    .invoke('text')
+    .then((text) => {
+      const attempts = Number(text.trim());
+      expect(attempts).to.be.gte(2);
+    });
+});
+
+Then('my remaining attempts decrease by 1', () => {
+  cy.get(SELECTORS.ATTEMPTS)
+    .invoke('text')
+    .then((text) => {
+      const attempts = Number(text.trim());
+      cy.getByAlias<number>('previousAttempts').then((previousAttempts) => {
+        expect(attempts).to.eq(previousAttempts - 1);
+      });
+    });
+});
+
+Then('the timer keeps running', () => {
+  cy.wait(1500);
+
+  cy.get(SELECTORS.TIMER)
+    .invoke('text')
+    .then((text) => {
+      const currentTimerValue = Number(text.trim());
+      cy.getByAlias<string>('previousTimer').then((previousTimerValue) => {
+        expect(currentTimerValue).to.be.gt(Number(previousTimerValue));
+      });
     });
 });
 
 Then('the timer stops immediately', () => {
-  cy.getByAlias<string>('finalTimer').then((finalTimerValue) => {
-    cy.wait(1500);
-    cy.get(SELECTORS.TIMER).should('have.text', finalTimerValue);
-  });
+  cy.get(SELECTORS.TIMER)
+    .invoke('text')
+    .then((text) => {
+      cy.getByAlias<string>('finalTimer').then((finalTimer) => {
+        expect(text.trim()).to.eq(finalTimer);
+      });
+    });
 });
 
 Then('the secret number is revealed', () => {
-  cy.getByAlias<number>('secretNumber').then((secretNumber) => {
-    cy.get(SELECTORS.SECRET_NUMBER)
-      .should('be.visible')
-      .invoke('text')
-      .then((text) => {
+  cy.get(SELECTORS.SECRET_NUMBER)
+    .should('be.visible')
+    .invoke('text')
+    .then((text) => {
+      cy.getByAlias<number>('secretNumber').then((secretNumber) => {
         expect(text.trim()).to.eq(String(secretNumber));
       });
-  });
+    });
 });

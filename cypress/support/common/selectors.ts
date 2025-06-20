@@ -1,4 +1,4 @@
-export type DataTestId = (typeof SELECTORS)[keyof typeof SELECTORS];
+export type TestSelector = (typeof SELECTORS)[keyof typeof SELECTORS];
 
 export const SELECTORS = {
   GAME_CONTAINER: '[data-testid="game-container"]',
