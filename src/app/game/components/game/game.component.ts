@@ -38,4 +38,8 @@ export class GameComponent {
     const { message } = this._gameService.checkGuess(Number(guess));
     this.gameMessage.set(message);
   }
+
+  protected restartGame(): void {
+    throw new Error('Method not implemented.');
+  }
 }

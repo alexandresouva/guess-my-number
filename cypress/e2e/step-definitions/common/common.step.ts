@@ -97,7 +97,7 @@ Then('the game resets', () => {
   cy.get(SELECTORS.TIMER)
     .invoke('text')
     .then((text) => {
-      expect(text.trim()).to.eq('0');
+      expect(text.trim()).to.eq('0.00');
     });
   cy.get(SELECTORS.SCORE)
     .invoke('text')

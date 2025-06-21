@@ -28,6 +28,10 @@ export class GameService {
     return this._processIncorrectGuess(guess);
   }
 
+  restart(): void {
+    throw new Error('Method not implemented.');
+  }
+
   private _processCorrectGuess(): GuessResult {
     this._timerService.stop();
 

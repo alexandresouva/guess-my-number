@@ -16,7 +16,7 @@ describe('GameComponent', () => {
   beforeEach(async () => {
     gameServiceSpy = jasmine.createSpyObj<GameService>(
       'GameService',
-      ['checkGuess'],
+      ['checkGuess', 'restart'],
       {
         gameOver: gameOverSignalMock,
         attempts: attemptsSignalMock,
@@ -107,6 +107,20 @@ describe('GameComponent', () => {
 
       expect(checkButton.disabled).toBe(false);
       expect(guessInput.disabled).toBe(false);
+    });
+  });
+
+  describe('restartGame', () => {
+    it('should update the game message', () => {
+      component['checkGuess']('abc'); // will update the initial game message
+
+      component['restart']();
+      expect(component['gameMessage']()).toBe('Start guessing...');
+    });
+
+    it('should call the GameService to restart the game', () => {
+      component['restart']();
+      expect(gameServiceSpy['restart']).toHaveBeenCalled();
     });
   });
 });

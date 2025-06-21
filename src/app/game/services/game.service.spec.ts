@@ -13,7 +13,7 @@ describe('GameService', () => {
   beforeEach(() => {
     timerServiceSpy = jasmine.createSpyObj<TimerService>(
       'TimerService',
-      ['start', 'stop'],
+      ['start', 'stop', 'reset'],
       { time: timeSignalMock }
     );
 
@@ -150,6 +150,39 @@ describe('GameService', () => {
       }
 
       expect(service.gameOver()).toBe(false);
+    });
+  });
+
+  describe('restart', () => {
+    it('should restart the game correctly after different numbers of guesses', () => {
+      const maxAttempts = 5;
+      const generateSecretNumberSpy = spyOn(
+        service,
+        '_generateSecretNumber' as keyof GameService
+      ).and.callThrough();
+
+      for (let i = 0; i <= maxAttempts; i++) {
+        for (let j = 0; j < i; j++) {
+          service.checkGuess(100);
+        }
+
+        service.restart();
+
+        expect(generateSecretNumberSpy).toHaveBeenCalled();
+        expect(timerServiceSpy['reset']).toHaveBeenCalled();
+        expect(service.gameOver()).toBe(false);
+        expect(service.attempts()).toBe(maxAttempts);
+        expect(service.score()).toBe(0);
+      }
+    });
+
+    it('should keep the highscore after restart', () => {
+      const secretNumber = service['_secretNumber']();
+
+      service.checkGuess(secretNumber);
+      service.restart();
+
+      expect(service.highscore()).toBeGreaterThan(10);
     });
   });
 });
