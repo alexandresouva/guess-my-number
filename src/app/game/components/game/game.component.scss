@@ -20,6 +20,19 @@
       transform: translate(-50%, -50%);
     }
 
+    &__tip {
+      font-size: 1.4rem;
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+    }
+
+    &__restart {
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+    }
+
     &__secret-number {
       background: #eee;
       color: #333;
@@ -58,20 +71,6 @@
         text-align: center;
         display: block;
         margin-bottom: 3rem;
-      }
-
-      &__check {
-        border: none;
-        background-color: #eee;
-        color: #222;
-        font-size: 2rem;
-        font-family: inherit;
-        padding: 2rem 3rem;
-        cursor: pointer;
-
-        &:hover {
-          background-color: #ccc;
-        }
       }
     }
 

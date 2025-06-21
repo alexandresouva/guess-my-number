@@ -4,10 +4,11 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { GameMessage } from '@app/game/models/game-message.model';
 import { GameService } from '@app/game/services/game.service';
 import { TimerService } from '@app/game/services/timer.service';
+import { RetroButtonComponent } from '../retro-button/retro-button.component';
 
 @Component({
   selector: 'app-game',
-  imports: [CommonModule],
+  imports: [CommonModule, RetroButtonComponent],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
   host: {
