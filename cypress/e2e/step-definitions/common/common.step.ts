@@ -4,6 +4,7 @@ import { ALIASES } from 'cypress/support/common/aliases';
 import { SELECTORS } from 'cypress/support/common/selectors';
 import { PAGES } from 'cypress/support/common/constants';
 import { generateRandomSecretNumberAndStub } from 'cypress/support/helpers/prepare-secret-number';
+import { expectElementToHaveText } from 'cypress/support/helpers/expect-to-have-text';
 
 Given('I am on the game page for guessing', () => {
   const { secretNumber, stubValue } = generateRandomSecretNumberAndStub();
@@ -84,29 +85,14 @@ Then('the secret number is revealed', () => {
 });
 
 Then('the game resets', () => {
-  cy.get(SELECTORS.SECRET_NUMBER)
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.eq('?');
-    });
-  cy.get(SELECTORS.ATTEMPTS)
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.eq('5');
-    });
-  cy.get(SELECTORS.TIMER)
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.eq('0.00');
-    });
-  cy.get(SELECTORS.SCORE)
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.eq('0');
-    });
-  cy.get(SELECTORS.GAME_MESSAGE)
-    .invoke('text')
-    .then((text) => {
-      expect(text.trim()).to.eq('Start guessing...');
-    });
+  expectElementToHaveText(SELECTORS.SECRET_NUMBER, '?');
+  expectElementToHaveText(SELECTORS.ATTEMPTS, '5');
+  expectElementToHaveText(SELECTORS.TIMER, '0.00');
+  expectElementToHaveText(SELECTORS.SCORE, '0');
+  expectElementToHaveText(SELECTORS.GAME_MESSAGE, 'Start guessing...');
+});
+
+Then(`I can't make any more guesses`, () => {
+  cy.get(SELECTORS.GUESS_INPUT).should('be.disabled');
+  cy.get(SELECTORS.CHECK_BUTTON).should('be.disabled');
 });

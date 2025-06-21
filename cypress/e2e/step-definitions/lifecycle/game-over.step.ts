@@ -4,6 +4,7 @@ import { ALIASES } from 'cypress/support/common/aliases';
 import { SELECTORS } from 'cypress/support/common/selectors';
 import { captureTextAndSaveAsAlias } from 'cypress/support/helpers/capture-and-wrap';
 
+// Scenario: I exhaust all attempts without a correct guess
 Given('I have used all 5 attempts without guessing correctly', () => {
   const attempts = 5;
   Cypress._.times(attempts, () => {
@@ -26,9 +27,4 @@ Then('the message "🫤 Game over..." is displayed', () => {
 
 Then('my final score is zero', () => {
   cy.get(SELECTORS.SCORE).should('have.text', '0');
-});
-
-Then(`I can't make any more guesses`, () => {
-  cy.get(SELECTORS.GUESS_INPUT).should('be.disabled');
-  cy.get(SELECTORS.CHECK_BUTTON).should('be.disabled');
 });

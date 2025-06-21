@@ -59,18 +59,18 @@ Then('the final score is displayed', () => {
 Then('the high score is updated if necessary', () => {
   captureTextAndSaveAsAlias(SELECTORS.SCORE, ALIASES.FINAL_SCORE);
 
-  cy.get(SELECTORS.HIGHSCORE)
-    .should('be.visible')
-    .invoke('text')
-    .then((highscoreText) => {
-      const highscore = Number(highscoreText.trim());
-      expect(highscore).to.be.a('number');
+  cy.getByAlias<number>('finalScore').then((finalScore) => {
+    cy.getByAlias<number>('previousHighscore').then((previousHighscore) => {
+      cy.get(SELECTORS.HIGHSCORE)
+        .should('be.visible')
+        .invoke('text')
+        .then((highscoreText) => {
+          const highscore = Number(highscoreText.trim());
+          expect(highscore).to.be.a('number');
 
-      cy.getByAlias<number>('finalScore').then((finalScore) => {
-        cy.getByAlias<number>('previousHighscore').then((previousHighscore) => {
           const expectedHighscore = Math.max(finalScore, previousHighscore);
           expect(highscore).to.eq(expectedHighscore);
         });
-      });
     });
+  });
 });

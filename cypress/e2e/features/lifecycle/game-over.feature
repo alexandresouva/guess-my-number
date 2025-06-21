@@ -10,3 +10,7 @@ Feature: Player loses after using all attempts
       And the secret number is revealed
       And I can't make any more guesses
 
+  Scenario: I won after making the correct guess
+    Given I am on the game page for guessing
+    When I guess the correct number
+    Then I can't make any more guesses
