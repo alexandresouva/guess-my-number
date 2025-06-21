@@ -39,7 +39,8 @@ export class GameComponent {
     this.gameMessage.set(message);
   }
 
-  protected restartGame(): void {
-    throw new Error('Method not implemented.');
+  protected restart(): void {
+    this.gameMessage.set('Start guessing...');
+    this._gameService.restart();
   }
 }

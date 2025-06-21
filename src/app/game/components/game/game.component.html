@@ -1,5 +1,14 @@
 <header class="header">
   <h1 class="header__title">Guess My Number!</h1>
+  <p class="header__tip">(Between 1 and 20)</p>
+  <button
+    type="button"
+    class="header__restart"
+    data-testid="restart-button"
+    (click)="restart()"
+  >
+    Restart!
+  </button>
   <span data-testid="secret-number" class="header__secret-number">
     {{ secretNumber() }}
   </span>

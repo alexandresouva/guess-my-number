@@ -29,7 +29,10 @@ export class GameService {
   }
 
   restart(): void {
-    throw new Error('Method not implemented.');
+    this._secretNumber.set(this._generateSecretNumber());
+    this._attempts.set(5);
+    this._score.set(0);
+    this._timerService.reset();
   }
 
   private _processCorrectGuess(): GuessResult {
