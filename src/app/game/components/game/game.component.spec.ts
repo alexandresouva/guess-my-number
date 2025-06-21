@@ -42,13 +42,13 @@ describe('GameComponent', () => {
 
   describe('checkGuess', () => {
     it('should update the game message and skip guess checking for invalid input', () => {
-      const emptyInput = '';
-      component['checkGuess'](emptyInput);
+      component['guess'].set('');
+      component['checkGuess']();
       expect(component['gameMessage']()).toBe('🤡 Choice a number');
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
 
-      const invalidInput = 'abc';
-      component['checkGuess'](invalidInput);
+      component['guess'].set('abc');
+      component['checkGuess']();
       expect(component['gameMessage']()).toBe('🤡 Choice a number');
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
     });
@@ -61,7 +61,8 @@ describe('GameComponent', () => {
         correct: false,
         message: '📈 Too high!'
       });
-      component['checkGuess'](guess);
+      component['guess'].set(guess);
+      component['checkGuess']();
       const finalMessage = component['gameMessage']();
 
       expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(Number(guess));
@@ -86,24 +87,27 @@ describe('GameComponent', () => {
       ) as HTMLInputElement;
     });
 
-    it('should update the game message, disable the check button and guess input when the gameOver is true', () => {
+    it('should update the game message, disable the check button and guess input when the gameOver is true', async () => {
       gameOverSignalMock.set(true);
       gameServiceSpy.checkGuess.and.returnValue({
         correct: false,
         message: '🫤 Game over...'
       });
 
-      component['checkGuess']('5');
+      component['guess'].set('5');
+      component['checkGuess']();
       fixture.detectChanges();
+      await fixture.whenStable();
 
       expect(component['gameMessage']()).toBe('🫤 Game over...');
       expect(checkButton.disabled).toBe(true);
       expect(guessInput.disabled).toBe(true);
     });
 
-    it('should not disable the check button and guess input when the gameOver is false', () => {
+    it('should not disable the check button and guess input when the gameOver is false', async () => {
       gameOverSignalMock.set(false);
       fixture.detectChanges();
+      await fixture.whenStable();
 
       expect(checkButton.disabled).toBe(false);
       expect(guessInput.disabled).toBe(false);
@@ -112,7 +116,8 @@ describe('GameComponent', () => {
 
   describe('restartGame', () => {
     it('should update the game message', () => {
-      component['checkGuess']('abc'); // will update the initial game message
+      component['guess'].set('abc');
+      component['checkGuess'](); // will update the initial game message
 
       component['restart']();
       expect(component['gameMessage']()).toBe('Start guessing...');

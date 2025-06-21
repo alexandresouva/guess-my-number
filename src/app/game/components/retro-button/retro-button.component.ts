@@ -18,6 +18,10 @@ import { Component } from '@angular/core';
       &:hover {
         background-color: #ccc;
       }
+
+      &:disabled {
+        cursor: not-allowed;
+      }
     }
   `
 })

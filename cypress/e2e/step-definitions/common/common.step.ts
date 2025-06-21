@@ -90,6 +90,9 @@ Then('the game resets', () => {
   expectElementToHaveText(SELECTORS.TIMER, '0.00');
   expectElementToHaveText(SELECTORS.SCORE, '0');
   expectElementToHaveText(SELECTORS.GAME_MESSAGE, 'Start guessing...');
+
+  cy.get(SELECTORS.GUESS_INPUT).should('be.enabled').and('have.value', '');
+  cy.get(SELECTORS.CHECK_BUTTON).should('be.enabled');
 });
 
 Then(`I can't make any more guesses`, () => {

@@ -5,10 +5,11 @@ import { GameMessage } from '@app/game/models/game-message.model';
 import { GameService } from '@app/game/services/game.service';
 import { TimerService } from '@app/game/services/timer.service';
 import { RetroButtonComponent } from '../retro-button/retro-button.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-game',
-  imports: [CommonModule, RetroButtonComponent],
+  imports: [CommonModule, RetroButtonComponent, FormsModule],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
   host: {
@@ -20,6 +21,7 @@ export class GameComponent {
   private readonly _gameService = inject(GameService);
   private readonly _timerService = inject(TimerService);
 
+  protected readonly guess = signal<string>('');
   protected readonly secretNumber = computed(() =>
     this.gameOver() ? this._gameService.secretNumber() : '?'
   );
@@ -31,17 +33,19 @@ export class GameComponent {
   protected readonly highscore = this._gameService.highscore;
   protected readonly gameOver = this._gameService.gameOver;
 
-  protected checkGuess(guess: string): void {
-    if (!guess || isNaN(Number(guess))) {
+  protected checkGuess(): void {
+    if (!this.guess() || isNaN(Number(this.guess()))) {
       return this.gameMessage.set('🤡 Choice a number');
     }
 
-    const { message } = this._gameService.checkGuess(Number(guess));
+    const { message } = this._gameService.checkGuess(Number(this.guess()));
     this.gameMessage.set(message);
   }
 
   protected restart(): void {
     this.gameMessage.set('Start guessing...');
+    this.guess.set('');
+
     this._gameService.restart();
   }
 }
