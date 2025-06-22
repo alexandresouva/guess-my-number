@@ -44,12 +44,12 @@ describe('GameComponent', () => {
     it('should update the game message and skip guess checking for invalid input', () => {
       component['guess'].set('');
       component['checkGuess']();
-      expect(component['gameMessage']()).toBe('🤡 Choice a number');
+      expect(component['gameMessage']()).toBe('🤡 Choose a number');
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
 
       component['guess'].set('abc');
       component['checkGuess']();
-      expect(component['gameMessage']()).toBe('🤡 Choice a number');
+      expect(component['gameMessage']()).toBe('🤡 Choose a number');
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
     });
 

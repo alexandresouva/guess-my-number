@@ -1,6 +1,4 @@
 <header class="header">
-  <h1 class="header__title">Guess My Number!</h1>
-  <p class="header__tip">(Between 1 and 25)</p>
   <button
     retroButton
     type="button"
@@ -10,10 +8,16 @@
   >
     Restart!
   </button>
-  <span data-testid="secret-number" class="header__secret-number">
-    {{ secretNumber() }}
-  </span>
+  <h1 class="header__title">Guess My Number!</h1>
+  <p class="header__tip">(Between 1 and 25)</p>
+
+  <div aria-label="Secret number">
+    <span data-testid="secret-number" class="header__secret-number">
+      {{ secretNumber() }}
+    </span>
+  </div>
 </header>
+
 <main class="game-container">
   <section class="game-actions">
     <input
@@ -23,6 +27,7 @@
       aria-label="Enter your guess"
       [disabled]="gameOver()"
       [(ngModel)]="guess"
+      (keyup.enter)="checkGuess()"
     />
     <button
       retroButton
@@ -61,3 +66,8 @@
     </div>
   </section>
 </main>
+
+<!-- Announcement for screen readers (accessibility) -->
+<output class="visually-hidden" aria-live="assertive" aria-atomic="true">
+  {{ screenReaderAnnouncement() }}
+</output>
