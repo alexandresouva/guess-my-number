@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout do código
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
@@ -46,6 +45,13 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
+      - name: Fail if no version change ❌
+        if: steps.version-check.outputs.changed == 'false'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            core.setFailed('No version change detected. Deployment skipped.')
+
       - name: Create Tag 🏷️
         if: steps.version-check.outputs.changed == 'true'
         run: |
@@ -56,15 +62,17 @@ jobs:
           git push origin ${{ steps.version-check.outputs.tag }}
 
       - name: Install dependencies 📦
+        if: steps.version-check.outputs.changed == 'true'
         run: npm ci
 
       - name: Build Angular 🔨
+        if: steps.version-check.outputs.changed == 'true'
         run: |
           npm run build -- --base-href "https://alexandresouva.github.io/guess-my-number/"
 
       - name: Deploy to GitHub Pages 🚀
-        uses: peaceiris/actions-gh-pages@v3
         if: steps.version-check.outputs.changed == 'true'
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/guess-my-number/browser
