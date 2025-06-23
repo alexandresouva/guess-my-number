@@ -1,73 +1,77 @@
-<header class="header">
-  <button
-    retroButton
-    type="button"
-    class="header__restart"
-    data-testid="restart-button"
-    (click)="restart()"
-  >
-    Restart!
-  </button>
-  <h1 class="header__title">Guess My Number!</h1>
-  <p class="header__tip">(Between 1 and 25)</p>
-
-  <div aria-label="Secret number">
-    <span data-testid="secret-number" class="header__secret-number">
-      {{ secretNumber() }}
-    </span>
-  </div>
-</header>
-
-<main class="game-container">
-  <section class="game-actions">
-    <input
-      type="number"
-      data-testid="guess-input"
-      class="game-actions__guess"
-      aria-label="Enter your guess"
-      [disabled]="gameOver()"
-      [(ngModel)]="guess"
-      (keyup.enter)="checkGuess()"
-    />
+<div class="app-container">
+  <header class="header">
     <button
       retroButton
       type="button"
-      data-testid="check-button"
-      class="game-actions__check"
-      [disabled]="gameOver()"
-      (click)="checkGuess()"
+      class="header__restart"
+      data-testid="restart-button"
+      (click)="restart()"
     >
-      Check!
+      Restart!
     </button>
-  </section>
-  <section class="game-info">
-    <p data-testid="game-message" class="game-info__message">
-      {{ gameMessage() | feedbackEmoji }}
-    </p>
-    <div class="game-info__details">
-      <p class="game-info__attempts">
-        🕹️ Attempts:
-        <span data-testid="attempts-available">{{ attempts() }}</span>
-      </p>
-      <p class="game-info__timer">
-        ⏱️ Time:
-        <span data-testid="timer">
-          {{ time() | number: '1.2-2' }}
-        </span>
-      </p>
-      <p class="game-info__score">
-        💯 Score:
-        <span data-testid="score">{{ score() | number: '1.0-0' }}</span>
-      </p>
-      <p class="game-info__highscore">
-        🥇 Highscore:
-        <span data-testid="highscore">{{ highscore() | number: '1.0-0' }}</span>
-      </p>
-    </div>
-  </section>
-</main>
+    <h1 class="header__title">Guess My Number!</h1>
+    <p class="header__tip">(Between 1 and 25)</p>
 
-<!-- Announcement for screen readers (accessibility) -->
-<output class="visually-hidden" aria-live="assertive" aria-atomic="true">
-  {{ screenReaderAnnouncement() }}
-</output>
+    <div aria-label="Secret number">
+      <span data-testid="secret-number" class="header__secret-number">
+        {{ secretNumber() }}
+      </span>
+    </div>
+  </header>
+
+  <main class="game-container">
+    <section class="game-actions">
+      <input
+        type="number"
+        data-testid="guess-input"
+        class="game-actions__guess"
+        aria-label="Enter your guess"
+        [disabled]="gameOver()"
+        [(ngModel)]="guess"
+        (keyup.enter)="checkGuess()"
+      />
+      <button
+        retroButton
+        type="button"
+        data-testid="check-button"
+        class="game-actions__check"
+        [disabled]="gameOver()"
+        (click)="checkGuess()"
+      >
+        Check!
+      </button>
+    </section>
+    <section class="game-info">
+      <p class="game-info__message" data-testid="game-message">
+        {{ gameMessage() | feedbackEmoji }}
+      </p>
+      <div class="game-info__details">
+        <p class="game-info__attempts">
+          🕹️ Attempts:
+          <span data-testid="attempts-available">{{ attempts() }}</span>
+        </p>
+        <p class="game-info__timer">
+          ⏱️ Time:
+          <span data-testid="timer">
+            {{ time() | number: '1.2-2' }}
+          </span>
+        </p>
+        <p class="game-info__score">
+          💯 Score:
+          <span data-testid="score">{{ score() | number: '1.0-0' }}</span>
+        </p>
+        <p class="game-info__highscore">
+          🥇 Highscore:
+          <span data-testid="highscore">{{
+            highscore() | number: '1.0-0'
+          }}</span>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Announcement for screen readers (accessibility) -->
+  <output class="visually-hidden" aria-live="assertive" aria-atomic="true">
+    {{ screenReaderAnnouncement() }}
+  </output>
+</div>

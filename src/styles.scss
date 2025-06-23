@@ -26,3 +26,9 @@ body {
   width: 1px;
   white-space: nowrap;
 }
+
+@media (width <= 768px) {
+  html {
+    font-size: 53%;
+  }
+}
