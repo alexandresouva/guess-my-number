@@ -1,4 +1,4 @@
-name: Detect Version Change and Deploy
+name: Deploy on Version Change
 
 on:
   push:
@@ -26,10 +26,7 @@ jobs:
         run: |
           git fetch origin main --depth=2
 
-          # Obter hash do commit anterior
           PREV_COMMIT=$(git rev-parse HEAD^1)
-
-          # Obter versão atual e anterior
           CURRENT_VERSION=$(jq -r .version package.json)
           PREVIOUS_VERSION=$(git show $PREV_COMMIT:package.json | jq -r .version)
 
@@ -68,7 +65,12 @@ jobs:
       - name: Build Angular 🔨
         if: steps.version-check.outputs.changed == 'true'
         run: |
-          npm run build -- --base-href "https://alexandresouva.github.io/guess-my-number/"
+          npm run build -- --base-href "/guess-my-number/"
+
+      - name: Copy index.html to 404.html for SPA fallback
+        if: steps.version-check.outputs.changed == 'true'
+        run: |
+          cp ./dist/guess-my-number/browser/index.html ./dist/guess-my-number/browser/404.html
 
       - name: Deploy to GitHub Pages 🚀
         if: steps.version-check.outputs.changed == 'true'
