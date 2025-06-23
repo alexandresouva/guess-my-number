@@ -1,6 +1,6 @@
 {
   "name": "guess-my-number",
-  "version": "0.0.1-rc.0",
+  "version": "0.0.1-rc.1",
   "scripts": {
     "start": "ng serve",
     "build": "npm run lint && npm run test && npm run test:e2e && ng build",
