@@ -79,6 +79,7 @@ describe('GameComponent', () => {
         correct: false,
         message
       });
+      gameOverSignalMock.set(false);
       attemptsSignalMock.set(4);
 
       component['guess'].set(guess);
