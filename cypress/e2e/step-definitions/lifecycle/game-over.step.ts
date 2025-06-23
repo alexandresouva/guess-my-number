@@ -21,7 +21,7 @@ Then('the message "🫤 Game over..." is displayed', () => {
     .should('be.visible')
     .invoke('text')
     .should((text) => {
-      expect(text.trim()).to.eq('🫤 Game over...');
+      expect(text.trim()).to.eq('🫤 Game over!');
     });
 });
 

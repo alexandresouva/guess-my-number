@@ -2,5 +2,5 @@ import { GuessFeedbackMessage } from './guess-result.model';
 
 export type GameMessage =
   | 'Start guessing...'
-  | '🤡 Choose a number'
+  | 'Choose a number'
   | GuessFeedbackMessage;

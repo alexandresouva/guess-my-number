@@ -42,7 +42,7 @@
   </section>
   <section class="game-info">
     <p data-testid="game-message" class="game-info__message">
-      {{ gameMessage() }}
+      {{ gameMessage() | feedbackEmoji }}
     </p>
     <div class="game-info__details">
       <p class="game-info__attempts">

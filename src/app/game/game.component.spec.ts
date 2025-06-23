@@ -44,12 +44,13 @@ describe('GameComponent', () => {
     it('should update the game message and skip guess checking for invalid input', () => {
       component['guess'].set('');
       component['checkGuess']();
-      expect(component['gameMessage']()).toBe('🤡 Choose a number');
+      expect(component['gameMessage']()).toBe('Choose a number');
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
 
       component['guess'].set('abc');
       component['checkGuess']();
-      expect(component['gameMessage']()).toBe('🤡 Choose a number');
+      expect(component['gameMessage']()).toBe('Choose a number');
+      expect(component['screenReaderAnnouncement']()).toBe('Choose a number');
       expect(gameServiceSpy['checkGuess']).not.toHaveBeenCalled();
     });
 
@@ -59,7 +60,7 @@ describe('GameComponent', () => {
 
       gameServiceSpy.checkGuess.and.returnValue({
         correct: false,
-        message: '📈 Too high!'
+        message: 'Too high'
       });
       component['guess'].set(guess);
       component['checkGuess']();
@@ -67,7 +68,25 @@ describe('GameComponent', () => {
 
       expect(gameServiceSpy['checkGuess']).toHaveBeenCalledWith(Number(guess));
       expect(finalMessage).not.toBe(initialMessage);
-      expect(finalMessage).toBe('📈 Too high!');
+      expect(finalMessage).toBe('Too high');
+    });
+
+    it('should build the screen reader announcement correctly after a guess', () => {
+      const guess = '100';
+      const message = 'Too high';
+
+      gameServiceSpy.checkGuess.and.returnValue({
+        correct: false,
+        message
+      });
+      attemptsSignalMock.set(4);
+
+      component['guess'].set(guess);
+      component['checkGuess']();
+
+      expect(component['screenReaderAnnouncement']()).toBe(
+        `Too high! Attempts remaining: 4.`
+      );
     });
   });
 
@@ -91,7 +110,7 @@ describe('GameComponent', () => {
       gameOverSignalMock.set(true);
       gameServiceSpy.checkGuess.and.returnValue({
         correct: false,
-        message: '🫤 Game over...'
+        message: 'Game over'
       });
 
       component['guess'].set('5');
@@ -99,7 +118,7 @@ describe('GameComponent', () => {
       fixture.detectChanges();
       await fixture.whenStable();
 
-      expect(component['gameMessage']()).toBe('🫤 Game over...');
+      expect(component['gameMessage']()).toBe('Game over');
       expect(checkButton.disabled).toBe(true);
       expect(guessInput.disabled).toBe(true);
     });

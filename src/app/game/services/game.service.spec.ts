@@ -46,7 +46,7 @@ describe('GameService', () => {
       expect(service.highscore()).toBeGreaterThanOrEqual(initialHighscore);
       expect(result).toEqual({
         correct: true,
-        message: '🎉 Correct number!'
+        message: 'Correct number'
       });
     });
 
@@ -60,7 +60,7 @@ describe('GameService', () => {
       expect(service.attempts()).toBe(initialAttempts - 1);
       expect(result).toEqual({
         correct: false,
-        message: '📉 Too low!'
+        message: 'Too low'
       });
     });
 
@@ -74,7 +74,7 @@ describe('GameService', () => {
       expect(service.attempts()).toBe(initialAttempts - 1);
       expect(result).toEqual({
         correct: false,
-        message: '📈 Too high!'
+        message: 'Too high'
       });
     });
   });

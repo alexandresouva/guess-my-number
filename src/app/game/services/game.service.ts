@@ -44,7 +44,7 @@ export class GameService {
 
     return {
       correct: true,
-      message: '🎉 Correct number!'
+      message: 'Correct number'
     };
   }
 
@@ -56,7 +56,7 @@ export class GameService {
 
     return {
       correct: false,
-      message: guess > this._secretNumber() ? '📈 Too high!' : '📉 Too low!'
+      message: guess > this._secretNumber() ? 'Too high' : 'Too low'
     };
   }
 
@@ -65,7 +65,7 @@ export class GameService {
 
     return {
       correct: false,
-      message: '🫤 Game over...'
+      message: 'Game over'
     };
   }
 

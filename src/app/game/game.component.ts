@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { GameMessage } from '@app/game/models/game-message.model';
 import { GameService } from '@app/game/services/game.service';
 import { TimerService } from '@app/game/services/timer.service';
-import { RetroButtonComponent } from '../retro-button/retro-button.component';
-import { FormsModule } from '@angular/forms';
-import { GameAnnouncementType } from '@app/game/models/enums/game-announcement-type';
+import { RetroButtonComponent } from './components/retro-button/retro-button.component';
+import { FeedbackEmojiPipe } from './pipes/feedback-emoji.pipe';
 
 @Component({
   selector: 'app-game',
-  imports: [CommonModule, RetroButtonComponent, FormsModule],
+  imports: [CommonModule, RetroButtonComponent, FormsModule, FeedbackEmojiPipe],
   templateUrl: './game.component.html',
   styleUrl: './game.component.scss',
   host: {
@@ -37,35 +37,23 @@ export class GameComponent {
 
   protected checkGuess(): void {
     if (!this.guess() || isNaN(Number(this.guess()))) {
-      this.gameMessage.set('🤡 Choose a number');
-      this._announceGameStateForScreenReaders(
-        GameAnnouncementType.INVALID_INPUT
-      );
+      const message: GameMessage = 'Choose a number';
+      this.gameMessage.set(message);
+      this.screenReaderAnnouncement.set(message);
       return;
     }
 
     const { message } = this._gameService.checkGuess(Number(this.guess()));
     this.gameMessage.set(message);
-    this._announceGameStateForScreenReaders(GameAnnouncementType.NEW_GUESS);
+    this.screenReaderAnnouncement.set(this._buildGameStatusAnnouncement());
   }
 
   protected restart(): void {
     this.guess.set('');
     this.gameMessage.set('Start guessing...');
+    this.screenReaderAnnouncement.set('Game restarted. Start guessing.');
 
     this._gameService.restart();
-    this._announceGameStateForScreenReaders(GameAnnouncementType.RESTART);
-  }
-
-  private _announceGameStateForScreenReaders(type: GameAnnouncementType): void {
-    const announcementsMap: Record<GameAnnouncementType, string> = {
-      [GameAnnouncementType.RESTART]: 'Game restarted. Start guessing.',
-      [GameAnnouncementType.INVALID_INPUT]: 'Choose a number.',
-      [GameAnnouncementType.NEW_GUESS]: this._buildGameStatusAnnouncement()
-    };
-
-    const announcement = announcementsMap[type];
-    this.screenReaderAnnouncement.set(announcement);
   }
 
   private _buildGameStatusAnnouncement(): string {
@@ -73,8 +61,8 @@ export class GameComponent {
     const roundedScore = Math.round(this.score());
 
     const message = this.gameOver()
-      ? `${this.gameMessage()} Score: ${roundedScore}. Time: ${roundedTime} seconds.`
-      : `${this.gameMessage()} Attempts remaining: ${this.attempts()}.`;
+      ? `${this.gameMessage()}! Score: ${roundedScore}. Time: ${roundedTime} seconds.`
+      : `${this.gameMessage()}! Attempts remaining: ${this.attempts()}.`;
 
     return message;
   }
