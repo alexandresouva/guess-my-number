@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Detect Version Change and Deploy
 
 on:
   push:
@@ -9,10 +9,11 @@ permissions:
   contents: write
 
 jobs:
-  deploy:
+  deploy-if-version-changed:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout do código
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
@@ -20,6 +21,39 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: Check if package.json version changed 🔍
+        id: version-check
+        run: |
+          git fetch origin main --depth=2
+
+          # Obter hash do commit anterior
+          PREV_COMMIT=$(git rev-parse HEAD^1)
+
+          # Obter versão atual e anterior
+          CURRENT_VERSION=$(jq -r .version package.json)
+          PREVIOUS_VERSION=$(git show $PREV_COMMIT:package.json | jq -r .version)
+
+          echo "Current version: $CURRENT_VERSION"
+          echo "Previous version: $PREVIOUS_VERSION"
+
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "tag=v$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "Version did not change."
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Tag 🏷️
+        if: steps.version-check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git tag ${{ steps.version-check.outputs.tag }}
+          git push origin ${{ steps.version-check.outputs.tag }}
 
       - name: Install dependencies 📦
         run: npm ci
@@ -30,6 +64,7 @@ jobs:
 
       - name: Deploy to GitHub Pages 🚀
         uses: peaceiris/actions-gh-pages@v3
+        if: steps.version-check.outputs.changed == 'true'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/guess-my-number/browser
