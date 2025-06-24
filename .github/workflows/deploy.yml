@@ -9,9 +9,11 @@ permissions:
   contents: write
 
 jobs:
-  deploy-if-version-changed:
+  find-new-version:
     runs-on: ubuntu-latest
-
+    outputs:
+      changed: ${{ steps.version-check.outputs.changed }}
+      tag: ${{ steps.version-check.outputs.tag }}
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
@@ -58,22 +60,31 @@ jobs:
           git tag ${{ steps.version-check.outputs.tag }}
           git push origin ${{ steps.version-check.outputs.tag }}
 
+  deploy:
+    needs: find-new-version
+    if: needs.find-new-version.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 🔧
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Install dependencies 📦
-        if: steps.version-check.outputs.changed == 'true'
         run: npm ci
 
       - name: Build Angular 🔨
-        if: steps.version-check.outputs.changed == 'true'
         run: |
           npm run build -- --base-href "/guess-my-number/"
 
       - name: Copy index.html to 404.html for SPA fallback
-        if: steps.version-check.outputs.changed == 'true'
         run: |
           cp ./dist/guess-my-number/browser/index.html ./dist/guess-my-number/browser/404.html
 
       - name: Deploy to GitHub Pages 🚀
-        if: steps.version-check.outputs.changed == 'true'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
