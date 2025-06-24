@@ -115,8 +115,32 @@
 }
 
 @media (width <= 640px) {
-  .game-container {
-    padding-top: 12rem;
-    flex-direction: column;
+  :host {
+    .app-container {
+      .header {
+        &__title {
+          font-size: 2.6rem;
+          padding: 1rem;
+        }
+
+        &__tip {
+          top: 22.2rem;
+          right: 50%;
+          transform: translateX(50%);
+          text-wrap: nowrap;
+        }
+      }
+
+      .game-container {
+        flex-direction: column;
+        padding-top: 12rem;
+
+        .game-info {
+          &__message {
+            margin-bottom: 6rem;
+          }
+        }
+      }
+    }
   }
 }
