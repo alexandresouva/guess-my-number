@@ -185,4 +185,29 @@ describe('GameService', () => {
       expect(service.highscore()).toBeGreaterThan(10);
     });
   });
+
+  describe('_loadHighscore', () => {
+    beforeEach(() => {
+      localStorage.clear();
+    });
+
+    it('should return 0 if localStorage is empty', () => {
+      expect(service['_loadHighscore']()).toBe(0);
+    });
+
+    it('should return stored highscore if it is a valid number', () => {
+      localStorage.setItem('guess-my-number-highscore', '150');
+      expect(service['_loadHighscore']()).toBe(150);
+    });
+
+    it('should return 0 if stored value is not a number', () => {
+      localStorage.setItem('guess-my-number-highscore', 'banana');
+      expect(service['_loadHighscore']()).toBe(0);
+    });
+
+    it('should parse numeric string correctly', () => {
+      localStorage.setItem('guess-my-number-highscore', '42');
+      expect(service['_loadHighscore']()).toBe(42);
+    });
+  });
 });

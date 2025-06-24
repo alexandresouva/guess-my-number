@@ -11,7 +11,7 @@ export class GameService {
   private readonly _secretNumber = signal(this._generateSecretNumber());
   private readonly _attempts = signal(5);
   private readonly _score = signal(0);
-  private readonly _highscore = signal(0);
+  private readonly _highscore = signal(this._loadHighscore());
 
   readonly gameOver = computed(() => {
     return this._attempts() === 0 || this.score() > 0;
@@ -86,5 +86,9 @@ export class GameService {
   private _updateHighscore(score: number): void {
     if (score <= this._highscore()) return;
     this._highscore.set(score);
+  }
+
+  private _loadHighscore(): number {
+    throw new Error('Method not implemented.');
   }
 }
