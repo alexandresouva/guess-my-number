@@ -2,6 +2,8 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { GuessResult } from '../models/guess-result.model';
 import { TimerService } from './timer.service';
 
+const HIGHSCORE_KEY = 'guess-my-number-highscore';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -86,9 +88,12 @@ export class GameService {
   private _updateHighscore(score: number): void {
     if (score <= this._highscore()) return;
     this._highscore.set(score);
+    localStorage.setItem(HIGHSCORE_KEY, score.toString());
   }
 
   private _loadHighscore(): number {
-    throw new Error('Method not implemented.');
+    const stored = localStorage.getItem(HIGHSCORE_KEY);
+    const parsed = stored ? Number(stored) : 0;
+    return isNaN(parsed) ? 0 : parsed;
   }
 }
