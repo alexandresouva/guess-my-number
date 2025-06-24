@@ -1,59 +1,115 @@
-# GuessMyNumber
+<div align="center"><img src="public/demo.gif" alt="Demonstração do jogo, onde o jogador insere os palpites 15, 20 e acerta com o número 17."></div>
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.14.
+# Guess My Number
 
-## Development server
+Jogo onde é preciso adivinhar o número secreto. Quanto menor o tempo e as tentativas utilizadas, maior a pontuação!
 
-To start a local development server, run:
+👉 Acesse o jogo em: **https://alexandresouva.github.io/guess-my-number**
+
+---
+
+## Indice
+
+- [🕹️ Sobre o jogo](#sobre-o-jogo)
+- [✅ Metodologias e Práticas Adotadas](#metodologias-e-práticas-adotadas)
+- [🚀 Tecnologias e Stacks](#tecnologias-e-stacks)
+- [🎯 Funcionalidades](#funcionalidades)
+- [🛠️ Como rodar localmente](#como-rodar-localmente)
+
+---
+
+## 🕹️ Sobre o jogo
+
+O objetivo é simples: **Adivinhar o número secreto entre 1 e 25.**
+
+O jogo fornece dicas após cada tentativa:
+
+- 📈 **"Too high"** (muito alto)
+- 📉 **"Too low"** (muito baixo)
+
+Ao acertar o número, o jogador recebe sua **pontuação** e pode comparar com o **recorde atual (highscore)**, representando o melhor desempenho obtido até o momento.
+
+E você, consegue bater o recorde?
+
+🕹️ [Jogue agora!](https://alexandresouva.github.io/guess-my-number)
+
+---
+
+## ✅ Metodologias e Práticas Adotadas
+
+🔍 BDD (Behavior-Driven Development): Desenvolvimento guiado por comportamento, utilizando cenários de negócio claros para definir funcionalidades.
+
+🧪 TDD (Test-Driven Development): Desenvolvimento orientado a testes, guiado pelas especificações obtidas com o BDD.
+
+---
+
+## 🚀 Tecnologias e Stacks
+
+- ✅ **Angular 19** (Standalone APIs + Angular Signals)
+- ✅ **BDD:** Cucumber + Gherkin + Cypress
+- ✅ **TypeScript**
+- ✅ **RxJS**
+- ✅ **SCSS/CSS**
+- ✅ **HTML Semântico**
+- ✅ **Acessibilidade Web (ARIA aplicada)**
+- ✅ **Testes unitários:** Karma + Jasmine
+- ✅ **Cypress:** testes end-to-end
+- ✅ **GitHub Actions:** CI/CD com deploy automático no GitHub Pages
+
+---
+
+## 🛠️ Funcionalidades
+
+- 🎯 Adivinhe o número secreto
+- ♻️ Reinicie o jogo
+- ⏱️ Visualização do tempo gasto
+- 🏆 Highscore salvo no navegador (localStorage)
+- 🔊 Feedback acessível para leitores de tela
+- 📱 **Responsivo para mobile, tablet e desktop**
+
+---
+
+## 🏗️ Como rodar localmente
+
+### 1. Clone o repositório:
 
 ```bash
-ng serve
+git clone https://github.com/alexandresouva/guess-my-number.git
+cd guess-my-number
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 2. Instale as dependências:
 
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### 3. Inicie o servidor:
 
 ```bash
-ng generate --help
+npm start
 ```
 
-## Building
+Acesse o jogo em: **http://localhost:4200**
 
-To build the project run:
+## Como testar
+
+### 1. Instale as dependências:
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### 2. Execute os testes unitários:
 
 ```bash
-ng test
+npm test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### 3. Execute os testes end-to-end:
 
 ```bash
-ng e2e
+npm run test:e2e
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Se preferir, execute ng e2e para visualizar os testes end-to-end em tempo real.
