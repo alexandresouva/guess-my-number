@@ -1,115 +1,119 @@
-<div align="center"><img src="public/demo.gif" alt="Demonstração do jogo, onde o jogador insere os palpites 15, 20 e acerta com o número 17."></div>
+<div align="center"><img src="public/demo.gif" alt="Game demo where the player enters guesses 15, 20 and correctly guesses the number 17."></div>
+
+## 🇧🇷 Portuguese Version
+
+For the Portuguese version of this documentation, please see [README.pt-BR.md](./docs/README.pt-BR.md).
 
 # Guess My Number
 
-Jogo onde é preciso adivinhar o número secreto. Quanto menor o tempo e as tentativas utilizadas, maior a pontuação!
+A game where you need to guess the secret number. The less time and attempts you use, the higher your score!
 
-👉 Acesse o jogo em: **https://alexandresouva.github.io/guess-my-number**
-
----
-
-## Indice
-
-- [🕹️ Sobre o jogo](#sobre-o-jogo)
-- [✅ Metodologias e Práticas Adotadas](#metodologias-e-práticas-adotadas)
-- [🚀 Tecnologias e Stacks](#tecnologias-e-stacks)
-- [🎯 Funcionalidades](#funcionalidades)
-- [🛠️ Como rodar localmente](#como-rodar-localmente)
+👉 Play the game at: **https://alexandresouva.github.io/guess-my-number**
 
 ---
 
-## 🕹️ Sobre o jogo
+## Index
 
-O objetivo é simples: **Adivinhar o número secreto entre 1 e 25.**
-
-O jogo fornece dicas após cada tentativa:
-
-- 📈 **"Too high"** (muito alto)
-- 📉 **"Too low"** (muito baixo)
-
-Ao acertar o número, o jogador recebe sua **pontuação** e pode comparar com o **recorde atual (highscore)**, representando o melhor desempenho obtido até o momento.
-
-E você, consegue bater o recorde?
-
-🕹️ [Jogue agora!](https://alexandresouva.github.io/guess-my-number)
+- [🕹️ About the Game](#about-the-game)
+- [✅ Methodologies and Practices](#methodologies-and-practices)
+- [🚀 Technologies and Stacks](#technologies-and-stacks)
+- [🎯 Features](#features)
+- [🛠️ How to Run Locally](#how-to-run-locally)
 
 ---
 
-## ✅ Metodologias e Práticas Adotadas
+## 🕹️ About the Game
 
-🔍 BDD (Behavior-Driven Development): Desenvolvimento guiado por comportamento, utilizando cenários de negócio claros para definir funcionalidades.
+The goal is simple: **Guess the secret number between 1 and 25.**
 
-🧪 TDD (Test-Driven Development): Desenvolvimento orientado a testes, guiado pelas especificações obtidas com o BDD.
+The game provides hints after each attempt:
+
+- 📈 **"Too high"**
+- 📉 **"Too low"**
+
+When you guess the number correctly, you receive your **score** and can compare it with the **current record (highscore)**, representing the best performance achieved so far.
+
+Can you beat the record?
+
+🕹️ [Play now!](https://alexandresouva.github.io/guess-my-number)
 
 ---
 
-## 🚀 Tecnologias e Stacks
+## ✅ Methodologies and Practices
+
+🔍 BDD (Behavior-Driven Development): using clear business scenarios to define features.
+
+🧪 TDD (Test-Driven Development): guided by specifications obtained with BDD.
+
+---
+
+## 🚀 Technologies and Stacks
 
 - ✅ **Angular 19** (Standalone APIs + Angular Signals)
 - ✅ **BDD:** Cucumber + Gherkin + Cypress
 - ✅ **TypeScript**
 - ✅ **RxJS**
 - ✅ **SCSS/CSS**
-- ✅ **HTML Semântico**
-- ✅ **Acessibilidade Web (ARIA aplicada)**
-- ✅ **Testes unitários:** Karma + Jasmine
-- ✅ **Cypress:** testes end-to-end
-- ✅ **GitHub Actions:** CI/CD com deploy automático no GitHub Pages
+- ✅ **Semantic HTML**
+- ✅ **Web Accessibility (ARIA applied)**
+- ✅ **Unit Testing:** Karma + Jasmine
+- ✅ **Cypress:** end-to-end testing
+- ✅ **GitHub Actions:** CI/CD with automatic deployment to GitHub Pages
 
 ---
 
-## 🛠️ Funcionalidades
+## 🛠️ Features
 
-- 🎯 Adivinhe o número secreto
-- ♻️ Reinicie o jogo
-- ⏱️ Visualização do tempo gasto
-- 🏆 Highscore salvo no navegador (localStorage)
-- 🔊 Feedback acessível para leitores de tela
-- 📱 **Responsivo para mobile, tablet e desktop**
+- 🎯 Guess the secret number
+- ♻️ Restart the game
+- ⏱️ Timer display
+- 🏆 Highscore saved in the browser (localStorage)
+- 🔊 Accessible feedback for screen readers
+- 📱 **Responsive for mobile, tablet, and desktop**
 
 ---
 
-## 🏗️ Como rodar localmente
+## 🏗️ How to run locally
 
-### 1. Clone o repositório:
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/alexandresouva/guess-my-number.git
 cd guess-my-number
 ```
 
-### 2. Instale as dependências:
+### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Inicie o servidor:
+### 3. Start the server
 
 ```bash
 npm start
 ```
 
-Acesse o jogo em: **http://localhost:4200**
+Access the game at: **http://localhost:4200**
 
-## Como testar
+## How to Test
 
-### 1. Instale as dependências:
+### 1. Install dependencies:
 
 ```bash
 npm install
 ```
 
-### 2. Execute os testes unitários:
+### 2. Run unit tests:
 
 ```bash
 npm test
 ```
 
-### 3. Execute os testes end-to-end:
+### 3. Run end-to-end tests:
 
 ```bash
 npm run test:e2e
 ```
 
-Se preferir, execute ng e2e para visualizar os testes end-to-end em tempo real.
+Alternatively, run `ng e2e` to watch end-to-end tests in real time.
