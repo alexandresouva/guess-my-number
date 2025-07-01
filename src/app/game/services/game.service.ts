@@ -76,7 +76,7 @@ export class GameService {
   }
 
   private _decreaseAttempts(): void {
-    this._attempts.set(this._attempts() - 1);
+    this._attempts.update((attempts) => attempts - 1);
   }
 
   private _calculateScore(): number {
