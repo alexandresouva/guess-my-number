@@ -1,2 +1,2 @@
 import './commands';
-import './common/hooks';
+import './common/cy-hooks';
